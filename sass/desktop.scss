@@ -1,0 +1,16 @@
+@import "./global/colors";
+
+.main__movie-details {
+	display: flex;
+	padding-inline: 2.4rem;
+	margin-block: 3.2rem;
+}
+
+.movie-details__img {
+	max-width: 30rem;
+	margin-inline: auto;
+}
+
+.hidden {
+	display: none;
+}

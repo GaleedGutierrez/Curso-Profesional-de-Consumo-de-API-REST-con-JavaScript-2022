@@ -1,0 +1,24 @@
+@import "./global/icons-google";
+@import "./global/reset-styles";
+@import "./global/global-styles";
+@import "./header/header";
+@import "./footer/footer";
+@import "./trends/trends";
+@import "./trends/carousel/carousel";
+@import "./categories/categories";
+@import "./details-movie/details-movie";
+@import "./similar-movies/similar-movies";
+@import "./generic-list/generic-list";
+@import "./buttons/buttons";
+
+// body {
+// 	margin-inline: 2.4rem;
+// }
+
+.hidden {
+	display: none;
+}
+
+// .main {
+// 	margin-block-start: 4rem; // comentado de momento
+// }

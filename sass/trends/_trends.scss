@@ -1,0 +1,12 @@
+.trending-preview__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-inline: 2.4rem;
+
+	// margin-block-end: 2.4rem;
+}
+
+.trending-preview__title {
+	font-weight: bold;
+}

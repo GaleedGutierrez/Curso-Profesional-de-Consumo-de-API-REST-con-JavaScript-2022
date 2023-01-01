@@ -1,0 +1,74 @@
+// Hexadecimal
+$purple-light-1: #fbfafb;
+$purple-light-2: #eeeaf2;
+$soft-purple: #aa84c8;
+$yellow: #eecc75;
+$action-rgb: 238 204 117;
+$green: #cad297;
+$light-blue: #a2eee5;
+$red: #f09d9d;
+$aqua: #b7eac5;
+$dark-blue: #8ea2ea;
+$purple-medium-1: #aa83c8;
+$purple-medium-2: #8b48bf;
+$purple-medium-3: #5c218a;
+$purple-dark-1: #3e0f64;
+$purple-dark-2: #2a0646;
+
+// RGB
+$yellow-rgb: 238 204 117;
+$red-rgb: 240 157 157;
+$green-rgb: 202 210 151;
+$light-blue-rgb: 162 238 229 ;
+$dark-blue-rgb: 142 162 234;
+$purple-dark-1-rgb: 62 15 100;
+$purple-medium-1-rgb: 170 131 200;
+
+body {
+	background-color: $purple-light-1;
+	color: $purple-dark-2;
+}
+
+p {
+	color: $purple-dark-2;
+}
+
+a {
+	color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+strong,
+blockquote,
+i,
+b,
+u,
+em {
+	color: inherit;
+}
+
+form,
+input,
+textarea,
+select,
+button,
+label {
+	background-color: transparent;
+	color: inherit;
+}
+
+/*
+    Configuramos el texto que seleccionamos
+    * Cambiar variables
+*/
+// ::selection {
+//     background-color: var(--primary-color);
+//     color: var(--secondary-color);
+// }

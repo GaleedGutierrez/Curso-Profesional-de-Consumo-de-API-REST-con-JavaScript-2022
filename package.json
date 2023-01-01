@@ -1,0 +1,33 @@
+{
+"name": "curso-profesional-de-consumo-de-api-rest-con-javascript-2022",
+"version": "1.0.0",
+"description": "Curso de Platzi",
+"main": "index.js",
+"scripts": {
+	"ts-watch": "tsc --watch",
+    "run-pug": "pug --watch ./pug --out ./html -P"
+},
+"repository": {
+	"type": "git",
+	"url": "git+https://github.com/GaleedGutierrez/Curso-Profesional-de-Consumo-de-API-REST-con-JavaScript-2022.git"
+},
+"author": "Galeed Gutierrez <galeedeveloper@gmail.com>",
+"license": "MIT",
+"bugs": {
+	"url": "https://github.com/GaleedGutierrez/Curso-Profesional-de-Consumo-de-API-REST-con-JavaScript-2022/issues"
+},
+"homepage": "https://github.com/GaleedGutierrez/Curso-Profesional-de-Consumo-de-API-REST-con-JavaScript-2022#readme",
+"devDependencies": {
+	"@typescript-eslint/eslint-plugin": "^5.45.0",
+	"@typescript-eslint/parser": "^5.45.0",
+	"axios": "^1.2.1",
+	"eslint": "^8.28.0",
+	"pug": "^3.0.2",
+	"pug-cli2": "^1.0.0-alpha6.1",
+	"stylelint": "^14.15.0",
+	"stylelint-config-standard-scss": "^6.1.0",
+	"stylelint-order": "^5.0.0",
+	"ts-node": "^10.9.1",
+	"typescript": "^4.9.3"
+}
+}

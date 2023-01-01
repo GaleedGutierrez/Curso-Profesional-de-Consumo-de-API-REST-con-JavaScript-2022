@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Página para consultar sobre películas y series.">
+    <meta name="robots" content="index,follow">
+    <link rel="shortcut icon" href="../assets/logo/flaticoin.webp" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" href="../css/style.css"/>
+    <link rel="stylesheet" href="../css/desktop.css" media="screen and (min-width:800px)"/>
+    <title>Platzi Movies</title>
+  </head>
+  <body>
+    <header class="header">
+      <section class="header__main-header" id="header__main-id">
+        <h1 class="header__title" id="header__title-id">PlatziMovies</h1>
+        <button class="material-symbols-outlined header__arrow-left">chevron_left</button>
+        <form class="header__form" action="" id="header__search-form-id">
+          <label class="header__label-search" for="search">
+            <input class="header__search-input" type="text" name="search" placeholder="Buscar" id="header__search-input-id">
+          </label>
+          <button class="header__button-search" type="submit" id="header__button-search-id"><span class="material-symbols-outlined header__search-icon">search</span></button>
+        </form>
+      </section>
+      <section class="header__category-movie hidden" id="header__category-id">
+        <button class="material-symbols-outlined header__arrow-left">chevron_left</button>
+        <h2 class="category-movie__title" id="category-movie__title-id"></h2>
+      </section>
+    </header>
+    <main class="main">
+      <section class="main__trending-preview" id="main__trending-preview-id">
+        <div class="trending-preview__header">
+          <h2 class="trending-preview__title">Tendencias</h2>
+          <button class="trending-preview-header__button main__button-see-more" id="trending-preview-header__button-id">Ver más</button>
+        </div>
+        <section class="carousel">
+          <div class="carousel-container" id="main__carousel-container-id"></div>
+        </section>
+      </section>
+      <section class="main__categories" id="main__categories-id"></section>
+      <section class="main__movie-details hidden" id="main__movie-details-id"></section>
+      <section class="main__similar-movies hidden" id="main__similar-movies-id">
+        <h3 class="similar-movies__title">Películas similares</h3>
+        <section class="carousel" id="similar-movies__carousel-scroll-id">
+          <div class="carousel-container" id="similar-movies__carousel-container-id"></div>
+        </section>
+      </section>
+      <section class="main__generic-list hidden" id="main__generic-list-id">
+        <div class="generic-list__container" id="generic-list__container-id"></div>
+      </section>
+    </main>
+    <footer class="footer">
+      <p class="footer__creators footer__designer">Diseñado por @juandc</p>
+      <p class="footer__creators footer__programmer">Programado por @galeedgutierrez</p>
+    </footer>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M8H4YB694S"></script>
+    <script src="../dist/googleAnalytics.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="../dist/index.js"></script>
+    <script type="module" src="../dist/navigation.js"></script>
+  </body>
+</html>

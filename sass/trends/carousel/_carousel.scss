@@ -1,0 +1,40 @@
+.carousel {
+	width: 100%;
+	padding-block: 2rem;
+	padding-inline: 1rem 3rem;
+	overflow-x: scroll;
+	overscroll-behavior-x: contain;
+	scroll-snap-type: x proximity;
+}
+
+.carousel-container {
+	margin-block: 7rem;
+	white-space: nowrap;
+}
+
+.carousel__item {
+	display: inline-block;
+	width: 20rem;
+	padding-right: 1rem;
+	transition-property: all;
+	transition-duration: 450ms;
+	transform-origin: center left;
+	scroll-snap-align: center;
+}
+
+.carousel__item-img {
+	border-radius: 1.2rem;
+}
+
+.carousel-container:hover .carousel__item {
+	// opacity: 0.3;
+}
+
+.carousel__item:hover ~ .carousel__item {
+	transform: translate3d(10rem, 0, 0);
+}
+
+.carousel-container:hover .carousel__item:hover {
+	transform: scale(1.5);
+	opacity: 1;
+}

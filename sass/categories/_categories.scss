@@ -1,0 +1,41 @@
+.main__categories {
+	display: grid;
+	gap: 0.8rem;
+	grid-template-columns: repeat(2, auto);
+	justify-content: space-around;
+	margin-block-end: 2.4rem;
+}
+
+.categories__category {
+	display: flex;
+	gap: 1.2rem;
+	align-items: center;
+
+	&::before {
+		display: inline-block;
+		content: "";
+		width: 3rem;
+		height: 3rem;
+		border-radius: 0.8rem;
+	}
+}
+
+#category-id-28::before { background-color: $yellow; }
+#category-id-12::before { background-color: $red; }
+#category-id-16::before { background-color: $green; }
+#category-id-35::before { background-color: $light-blue; }
+#category-id-80::before { background-color: $dark-blue; }
+#category-id-99::before { background-color: $purple-dark-1; }
+#category-id-18::before { background-color: $purple-medium-1; }
+#category-id-10751::before { background-color: $yellow; }
+#category-id-14::before { background-color: $red; }
+#category-id-36::before { background-color: $green; }
+#category-id-27::before { background-color: $light-blue; }
+#category-id-10402::before { background-color: $dark-blue; }
+#category-id-9648::before { background-color: $purple-dark-1; }
+#category-id-10749::before { background-color: $purple-medium-1; }
+#category-id-878::before { background-color: $yellow; }
+#category-id-10770::before { background-color: $red; }
+#category-id-53::before { background-color: $green; }
+#category-id-10752::before { background-color: $light-blue; }
+#category-id-37::before { background-color: $dark-blue; }

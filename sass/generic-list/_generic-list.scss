@@ -1,0 +1,19 @@
+.main__generic-list {
+	margin-block-end: 3.2rem;
+}
+
+.generic-list__container {
+	display: grid;
+	gap: 1.2rem;
+	grid-template-columns: repeat(auto-fit, minmax(12.8rem, 1fr));
+	padding-inline: 2.4rem;
+	margin-block-end: 3.2rem;
+}
+
+.generic-list__img {
+	border-radius: 1.2rem;
+}
+
+.generic-list__button {
+	margin-inline: auto;
+}

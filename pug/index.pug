@@ -1,0 +1,62 @@
+extend ./components/global/_global.pug
+block head
+	- const SEE_HEADER = true
+	- const SEE_FOOTER = true
+	+style-head("style.css")
+	//- +style-head-responsive("homepage/tablet.css", "800")
+	+style-head-responsive("desktop.css", "800")
+	+titles("Platzi Movies")
+block main
+	main.main
+		section#main__trending-preview-id.main__trending-preview
+			.trending-preview__header
+				h2.trending-preview__title Tendencias
+				button#trending-preview-header__button-id.trending-preview-header__button.main__button-see-more Ver más
+			section.carousel
+				#main__carousel-container-id.carousel-container
+					//- article.carousel__item
+					//- 	+figure-img("../assets/img/Movie Img.png", "Domy img")
+
+		section#main__categories-id.main__categories
+			//- p#category-id-28.categories__category Acción
+
+		section#main__movie-details-id.main__movie-details.hidden
+			//- button#movie-details__button-go-back.material-symbols-outlined.movie-details__arrow-left chevron_left
+			//- +figure-img("../assets/img/deadpool.png", "Domy img").movie-details__img
+			//- .movie-details__data-container
+			//- 	.movie-details__header
+			//- 		h2.data-container__title Deadpool 2
+			//- 		.data-container__rating-container
+			//- 			p.material-symbols-outlined.data-container__rating-star star
+			//- 			p.data-container__rating 7.6
+			//- 	p.movie-details__description Wisecracking mercenary Deadpool battles the evil and powerful Cable and other bad guys to save a boy's life.
+			//- 	.main__categories
+			//- 		p.categories__category.categories__category--action Acción
+			//- 		p.categories__category.categories__category--aventure Aventura
+			//- 		p.categories__category.categories__category--comedy Comedia
+
+		section#main__similar-movies-id.main__similar-movies.hidden
+			h3.similar-movies__title Películas similares
+			section#similar-movies__carousel-scroll-id.carousel
+				#similar-movies__carousel-container-id.carousel-container
+					//- article
+					//- article.carousel__item
+					//- 	+figure-img("../assets/img/Movie Img.png", "Domy img")
+					//- article.carousel__item
+					//- 	+figure-img("../assets/img/Movie Img.png", "Domy img")
+					//- article.carousel__item
+					//- 	+figure-img("../assets/img/Movie Img.png", "Domy img")
+
+		section#main__generic-list-id.main__generic-list.hidden
+			#generic-list__container-id.generic-list__container
+				//- +figure-img("../assets/img/Movie Img.png", "Domy img").generic-list__img
+				//- +figure-img("../assets/img/Movie Img.png", "Domy img").generic-list__img
+				//- +figure-img("../assets/img/Movie Img.png", "Domy img").generic-list__img
+				//- +figure-img("../assets/img/Movie Img.png", "Domy img").generic-list__img
+			//- button.generic-list__button.main__button-see-more Ver más
+block scripts
+	script(async src="https://www.googletagmanager.com/gtag/js?id=G-M8H4YB694S")
+	script(src="../dist/googleAnalytics.js")
+	script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+	script(type="module" src="../dist/index.js")
+	script(type="module" src="../dist/navigation.js")

@@ -1,0 +1,159 @@
+@import "../global/functions";
+
+.header__main-header {
+	padding-block: 3.6rem 3.2rem;
+	padding-inline: 2.4rem;
+}
+
+.header__title {
+	margin-block-end: 1.6rem;
+	font-weight: bold;
+}
+
+.header__form {
+	display: flex;
+	height: 5.2rem;
+}
+
+.header__label-search {
+	width: 81.56%;
+}
+
+.header__search-input {
+	@include font-small;
+
+	width: 100%;
+	height: 100%;
+	padding-block: 0.8rem;
+	padding-inline-start: 1.6rem;
+	border-bottom-left-radius: 0.8rem;
+	border-top-left-radius: 0.8rem;
+	background-color: $purple-light-2;
+	color: $purple-dark-2;
+}
+
+.header__button-search {
+	position: relative;
+	width: 18.35%;
+	height: 100%;
+	border: 0.2rem solid $purple-dark-2;
+	border-bottom-right-radius: 0.8rem;
+	border-top-right-radius: 0.8rem;
+	background-color: $purple-dark-2;
+
+	&:hover {
+		border-color: $soft-purple;
+		background-color: $purple-light-1;
+		color: $soft-purple;
+	}
+
+	&:active {
+		border-color: $purple-medium-1;
+		background-color: $purple-medium-1;
+		color: $purple-light-1;
+	}
+}
+
+.header__search-icon {
+	@include font-x-large;
+
+	position: absolute;
+	left: calc(50% - 1.6rem);
+	top: calc(50% - 1.8rem);
+	color: $purple-light-1;
+}
+
+.header__button-search:hover .header__search-icon {
+	color: $soft-purple;
+}
+
+.header__button-search:active .header__search-icon {
+	color: $purple-light-1;
+}
+
+.header-category-movie {
+	padding: 0;
+	margin: 0;
+}
+
+.header__arrow-left {
+	@include font-x-large;
+
+	width: 3.6rem;
+	border-radius: 0.8rem;
+	margin-block-end: 2.4rem;
+
+	&:hover {
+		color: $soft-purple;
+	}
+
+	&:active {
+		border-color: $purple-medium-1;
+		background-color: $purple-medium-1;
+		color: $purple-light-1;
+	}
+}
+
+.header__category-movie {
+	height: 14rem;
+	padding-block-start: 3.6rem;
+	padding-inline-start: 2.4rem;
+	margin-block-end: 3.2rem;
+}
+
+#header__category-id-28 { background: get-linear-gradient($yellow-rgb); }
+#header__category-id-12 { background: get-linear-gradient($red-rgb); }
+#header__category-id-16 { background: get-linear-gradient($green-rgb); }
+#header__category-id-35 { background: get-linear-gradient($light-blue-rgb); }
+#header__category-id-80 { background: get-linear-gradient($dark-blue-rgb); }
+#header__category-id-99 { background: get-linear-gradient($purple-dark-1-rgb); }
+#header__category-id-18 { background: get-linear-gradient($purple-medium-1-rgb); }
+#header__category-id-10751 { background: get-linear-gradient($yellow-rgb); }
+#header__category-id-14 { background: get-linear-gradient($red-rgb); }
+#header__category-id-36 { background: get-linear-gradient($green-rgb); }
+#header__category-id-27 { background: get-linear-gradient($light-blue-rgb); }
+#header__category-id-10402 { background: get-linear-gradient($dark-blue-rgb); }
+#header__category-id-9648 { background: get-linear-gradient($purple-dark-1-rgb); }
+#header__category-id-10749 { background: get-linear-gradient($purple-medium-1-rgb); }
+#header__category-id-878 { background: get-linear-gradient($yellow-rgb); }
+#header__category-id-10770 { background: get-linear-gradient($red-rgb); }
+#header__category-id-53 { background: get-linear-gradient($green-rgb); }
+#header__category-id-10752 { background: get-linear-gradient($light-blue-rgb); }
+#header__category-id-37 { background: get-linear-gradient($dark-blue-rgb); }
+
+.category-movie__title {
+	display: flex;
+	gap: 1.2rem;
+	align-items: center;
+
+	// padding-inline-start: 2.4rem;
+	font-weight: bold;
+
+	&::before {
+		display: inline-block;
+		content: "";
+		width: 3rem;
+		height: 3rem;
+		border-radius: 0.8rem;
+	}
+}
+
+#category-movie__title-id-28::before { background-color: $yellow; }
+#category-movie__title-id-12::before { background-color: $red; }
+#category-movie__title-id-16::before { background-color: $green; }
+#category-movie__title-id-35::before { background-color: $light-blue; }
+#category-movie__title-id-80::before { background-color: $dark-blue; }
+#category-movie__title-id-99::before { background-color: $purple-dark-1; }
+#category-movie__title-id-18::before { background-color: $purple-medium-1; }
+#category-movie__title-id-10751::before { background-color: $yellow; }
+#category-movie__title-id-14::before { background-color: $red; }
+#category-movie__title-id-36::before { background-color: $green; }
+#category-movie__title-id-27::before { background-color: $light-blue; }
+#category-movie__title-id-10402::before { background-color: $dark-blue; }
+#category-movie__title-id-9648::before { background-color: $purple-dark-1; }
+#category-movie__title-id-10749::before { background-color: $purple-medium-1; }
+#category-movie__title-id-878::before { background-color: $yellow; }
+#category-movie__title-id-10770::before { background-color: $red; }
+#category-movie__title-id-53::before { background-color: $green; }
+#category-movie__title-id-10752::before { background-color: $light-blue; }
+#category-movie__title-id-37::before { background-color: $dark-blue; }
