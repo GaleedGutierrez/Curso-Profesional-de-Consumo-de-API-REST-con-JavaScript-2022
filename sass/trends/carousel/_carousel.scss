@@ -26,15 +26,15 @@
 	border-radius: 1.2rem;
 }
 
-.carousel-container:hover .carousel__item {
-	// opacity: 0.3;
-}
+// .carousel-container:hover .carousel__item {
+// 	opacity: 0.3;
+// }
 
 .carousel__item:hover ~ .carousel__item {
 	transform: translate3d(10rem, 0, 0);
 }
 
-.carousel-container:hover .carousel__item:hover {
+.carousel-container .carousel__item:hover {
 	transform: scale(1.5);
-	opacity: 1;
+	// opacity: 1;
 }

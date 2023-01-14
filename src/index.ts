@@ -115,6 +115,3 @@ const api = axios.create({
 		api_key : API_KEY
 	}
 });
-
-setImgTrending();
-setCategory([], CATEGORIES_CONTAINER, true);

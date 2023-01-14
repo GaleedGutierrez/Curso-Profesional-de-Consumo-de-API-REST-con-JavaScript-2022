@@ -1,4 +1,4 @@
-import { getMovieById, getMovieBySearch, getMoviesByCategory, getRelatedMoviesId, getTrendingMoviesPreview, setCategory, setGenericMoviesList } from './index.js';
+import { getMovieById, getMovieBySearch, getMoviesByCategory, getRelatedMoviesId, getTrendingMoviesPreview, setCategory, setGenericMoviesList, setImgTrending } from './index.js';
 import { MovieSearchInterface } from './interfaces.mjs';
 import { BUTTONS_GO_BACK, BUTTON_SEARCH, BUTTON_TREADING, CATEGORIES_CONTAINER, GENERIC_LIST, GENERIC_LIST_CONTAINER, HEADER_CATEGORY, HEADER_MAIN, HEADER_TITLE, MOVIE_DETAILS, SEARCH_INPUT, SIMILAR_MOVIES, SIMILAR_MOVIES_CAROUSEL, SIMILAR_MOVIES_SCROLL, TITLE_CATEGORY, TRENDING_PREVIEW } from './nodes.mjs';
 
@@ -34,6 +34,9 @@ const homePage = () => {
 	TRENDING_PREVIEW.classList.remove('hidden');
 	CATEGORIES_CONTAINER.classList.remove('hidden');
 	HEADER_TITLE.classList.remove('hidden');
+
+	setImgTrending();
+	setCategory([], CATEGORIES_CONTAINER, true);
 };
 
 const categoryPage = async () => {
