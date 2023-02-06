@@ -136,6 +136,15 @@
 		height: 3rem;
 		border-radius: 0.8rem;
 	}
+
+	&::after {
+		display: inline-block;
+		content: "";
+		width: 7rem;
+		height: 3rem;
+		border-radius: 0.8rem;
+		background-color: transparent;
+	}
 }
 
 #category-movie__title-id-28::before { background-color: $yellow; }

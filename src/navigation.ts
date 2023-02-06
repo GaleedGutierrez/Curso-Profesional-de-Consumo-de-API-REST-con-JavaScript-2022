@@ -1,6 +1,7 @@
 import { getMovieById, getMovieBySearch, getMoviesByCategory, getRelatedMoviesId, getTrendingMoviesPreview, setCategory, setGenericMoviesList, setImgTrending } from './index.js';
-import { MovieSearchInterface } from './interfaces.mjs';
-import { BUTTONS_GO_BACK, BUTTON_SEARCH, BUTTON_TREADING, CATEGORIES_CONTAINER, GENERIC_LIST, GENERIC_LIST_CONTAINER, HEADER_CATEGORY, HEADER_MAIN, HEADER_TITLE, MOVIE_DETAILS, SEARCH_INPUT, SIMILAR_MOVIES, SIMILAR_MOVIES_CAROUSEL, SIMILAR_MOVIES_SCROLL, TITLE_CATEGORY, TRENDING_PREVIEW } from './nodes.mjs';
+import { MovieInterface, MovieSearchInterface } from './interfaces.mjs';
+import { BUTTONS_GO_BACK, BUTTON_SEARCH, BUTTON_TREADING, CAROUSEL_CONTAINER, CATEGORIES_CONTAINER, GENERIC_LIST, GENERIC_LIST_CONTAINER, HEADER_CATEGORY, HEADER_MAIN, HEADER_TITLE, MOVIE_DETAILS, SEARCH_ICON, SEARCH_INPUT, SIMILAR_MOVIES, SIMILAR_MOVIES_CAROUSEL, SIMILAR_MOVIES_SCROLL, TITLE_CATEGORY, TRENDING_PREVIEW } from './nodes.mjs';
+import { removeSkeleton, removeSkeletonGoBackButton, skeletonMovieAndCategories } from './skeleton.js';
 
 const navigator = () => {
 	window.scroll(0, 0);
@@ -24,7 +25,11 @@ const navigator = () => {
 	homePage();
 };
 
-const homePage = () => {
+const homePage = async () => {
+	const ARE_THERE_MOVIES = true;
+	const ARE_THERE_CATEGORIES = true;
+	const ARE_THERE_CARROUSEL = true;
+
 	HEADER_CATEGORY.classList.add('hidden');
 	MOVIE_DETAILS.classList.add('hidden');
 	SIMILAR_MOVIES.classList.add('hidden');
@@ -35,12 +40,26 @@ const homePage = () => {
 	CATEGORIES_CONTAINER.classList.remove('hidden');
 	HEADER_TITLE.classList.remove('hidden');
 
-	setImgTrending();
+	skeletonMovieAndCategories([ CAROUSEL_CONTAINER, CATEGORIES_CONTAINER ], ARE_THERE_MOVIES, ARE_THERE_CATEGORIES, ARE_THERE_CARROUSEL);
+	await setImgTrending();
 	setCategory([], CATEGORIES_CONTAINER, true);
 };
 
 const categoryPage = async () => {
-	console.log('CATEGORY 37');
+	const ARE_THERE_MOVIES = true;
+	const ARE_THERE_CATEGORIES = false;
+	const ARE_THERE_CARROUSEL = false;
+	const [ HASH_NAME, CATEGORY_INFO ] = location.hash.split('=');
+	const [ ID, NAME ] = CATEGORY_INFO.split('-');
+	const MOVIES = await getMoviesByCategory(ID);
+	const IS_THERE_SPACE = NAME.includes('%20');
+	const IS_THERE_TITLE = TITLE_CATEGORY.classList.contains('category-movie__title');
+
+	if (IS_THERE_TITLE)
+		TITLE_CATEGORY.classList.remove('category-movie__title');
+
+	TITLE_CATEGORY.innerHTML = '';
+
 	HEADER_MAIN.classList.add('hidden');
 	MOVIE_DETAILS.classList.add('hidden');
 	SIMILAR_MOVIES.classList.add('hidden');
@@ -50,21 +69,28 @@ const categoryPage = async () => {
 	HEADER_CATEGORY.classList.remove('hidden');
 	GENERIC_LIST.classList.remove('hidden');
 
-	const [ HASH_NAME, CATEGORY_INFO ] = location.hash.split('=');
-	const [ ID, NAME ] = CATEGORY_INFO.split('-');
-	const MOVIES = await getMoviesByCategory(ID);
-	const IS_THERE_SPACE = NAME.includes('%20');
+	skeletonMovieAndCategories([GENERIC_LIST_CONTAINER], ARE_THERE_MOVIES, ARE_THERE_CATEGORIES, ARE_THERE_CARROUSEL);
 
-	TITLE_CATEGORY.setAttribute('id', `category-movie__title-id-${ID}`);
+	TITLE_CATEGORY.classList.add('category-movie__title');
 	HEADER_CATEGORY.setAttribute('id', `header__category-id-${ID}`);
+	TITLE_CATEGORY.setAttribute('id', `category-movie__title-id-${ID}`);
 	TITLE_CATEGORY.innerHTML = (IS_THERE_SPACE)
 		? NAME.replace('%20', '&nbsp')
 		: NAME;
 	setGenericMoviesList(MOVIES, GENERIC_LIST_CONTAINER, false);
+	removeSkeletonGoBackButton();
 };
 
 const moviePage = async () => {
-	console.log('MOVIE');
+	const THERE_IS_SKELETON = true;
+	const ARE_THERE_MOVIES = true;
+	const ARE_THERE_CATEGORIES = true;
+	const ARE_THERE_CARROUSEL = true;
+	const [ HASH_NAME, ID ] = location.hash.split('=');
+	const MOVIE = await getMovieById(ID);
+
+	movieDetails(THERE_IS_SKELETON);
+
 	TRENDING_PREVIEW.classList.add('hidden');
 	CATEGORIES_CONTAINER.classList.add('hidden');
 	GENERIC_LIST.classList.add('hidden');
@@ -75,37 +101,56 @@ const moviePage = async () => {
 	SIMILAR_MOVIES.classList.remove('hidden');
 	MOVIE_DETAILS.classList.remove('hidden');
 
-	const [ HASH_NAME, ID ] = location.hash.split('=');
-	const MOVIE = await getMovieById(ID);
-
-	MOVIE_DETAILS.innerHTML = `<button class="material-symbols-outlined movie-details__arrow-left" id="movie-details__button-go-back-id">chevron_left</button>
-	<figure class="movie-details__img">
-		<img src="https://image.tmdb.org/t/p/w500${MOVIE.poster_path}" alt="${MOVIE.title}"/>
-	</figure>
-	<div class="movie-details__data-container">
-	  <div class="movie-details__header">
-		<h2 class="data-container__title">${MOVIE.title}</h2>
-		<div class="data-container__rating-container">
-		  <p class="material-symbols-outlined data-container__rating-star">star</p>
-		  <p class="data-container__rating">${MOVIE.vote_average.toFixed(2)}</p>
-		</div>
-	  </div>
-	  <p class="movie-details__description">${MOVIE.overview}</p>
-	  <div id="similar-movies__categories-container-id" class="main__categories">
-	  </div>
-	</div>`;
+	movieDetails(!THERE_IS_SKELETON, MOVIE);
 
 	const MOVIE_BUTTON_GO_BACK = document.querySelector('#movie-details__button-go-back-id') as HTMLButtonElement;
 	const MOVIE_CATEGORIES_CONTAINER = document.querySelector('#similar-movies__categories-container-id') as HTMLElement;
 	const RELATED_MOVIES = await getRelatedMoviesId(MOVIE.id);
 
+	skeletonMovieAndCategories([ SIMILAR_MOVIES_CAROUSEL, MOVIE_CATEGORIES_CONTAINER ], ARE_THERE_MOVIES, ARE_THERE_CATEGORIES, ARE_THERE_CARROUSEL);
 	MOVIE_BUTTON_GO_BACK.addEventListener('click', goBackButton);
+
 	setCategory(MOVIE.genres, MOVIE_CATEGORIES_CONTAINER, false);
 	setGenericMoviesList(RELATED_MOVIES, SIMILAR_MOVIES_CAROUSEL, true);
 	SIMILAR_MOVIES_SCROLL.scroll(0, 0);
 };
 
+const movieDetails = (isSkeleton: boolean, movie = {} as MovieInterface) => {
+	MOVIE_DETAILS.innerHTML = `${(isSkeleton)
+		? '<button class="material-symbols-outlined movie-details__arrow-left-skeleton" id="movie-details__button-go-back-id"></button>'
+		: '<button class="material-symbols-outlined movie-details__arrow-left" id="movie-details__button-go-back-id">chevron_left</button>'}
+	${(isSkeleton)
+		? '<figure class="movie-details__img-skeleton"></figure>'
+		: `<figure class="movie-details__img">
+			<img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.title}" />
+		</figure>`}
+	<div class="movie-details__data-container">
+		<div class="movie-details__header">
+		${(isSkeleton)
+		? '<h2 class="data-container__title-skeleton"></h2>'
+		: `<h2 class="data-container__title">${movie.title}</h2>`}
+			<div class="data-container__rating-container">
+				${(isSkeleton)
+		? '<p class="material-symbols-outlined data-container__rating-star-skeleton"></p>'
+		: '<p class="material-symbols-outlined data-container__rating-star">star</p>'}
+				${(isSkeleton)
+		? '<p class="data-container__rating-skeleton"></p>'
+		: `<p class="data-container__rating">${movie.vote_average.toFixed(2)}</p>`}
+			</div>
+		</div>
+		${(isSkeleton)
+		? '<p class="movie-details__description-skeleton"></p>'
+		: `<p class="movie-details__description">${movie.overview}</p>`}
+		<div id="similar-movies__categories-container-id" class="main__categories">
+		</div>
+	</div>`;
+};
+
 const searchPage = async () => {
+	const ITEM_SKELETON = document.createElement('article');
+
+	ITEM_SKELETON.classList.add('carousel__item-generic-list-skeleton');
+
 	TRENDING_PREVIEW.classList.add('hidden');
 	CATEGORIES_CONTAINER.classList.add('hidden');
 	HEADER_CATEGORY.classList.add('hidden');
@@ -113,17 +158,28 @@ const searchPage = async () => {
 	MOVIE_DETAILS.classList.add('hidden');
 	HEADER_TITLE.classList.add('hidden');
 
+	for (let i = 0; i < 10; i++) {
+		GENERIC_LIST_CONTAINER.append(ITEM_SKELETON.cloneNode(true));
+	}
+
 	HEADER_MAIN.classList.remove('hidden');
 	GENERIC_LIST.classList.remove('hidden');
 
 	const [ HASH_NAME, QUERY ] = location.hash.split('=');
 	const MOVIES = await getMovieBySearch(QUERY);
 
-	setGenericMoviesList(MOVIES, GENERIC_LIST_CONTAINER, false);
+	if (MOVIES.length !== 0)
+		setGenericMoviesList(MOVIES, GENERIC_LIST_CONTAINER, false);
+
+	removeSkeletonGoBackButton();
 };
 
 const trendsPage = async () => {
 	console.log('TRENDS');
+
+	const ITEM_SKELETON = document.createElement('article');
+
+	ITEM_SKELETON.classList.add('carousel__item-generic-list-skeleton');
 	HEADER_MAIN.classList.add('hidden');
 	TRENDING_PREVIEW.classList.add('hidden');
 	CATEGORIES_CONTAINER.classList.add('hidden');
@@ -134,11 +190,19 @@ const trendsPage = async () => {
 	HEADER_CATEGORY.classList.remove('hidden');
 	GENERIC_LIST.classList.remove('hidden');
 
+	for (let i = 0; i < 10; i++) {
+		GENERIC_LIST_CONTAINER.append(ITEM_SKELETON.cloneNode(true));
+	}
+
+	TITLE_CATEGORY.classList.add('categories__category-skeleton');
+
 	TITLE_CATEGORY.innerText = 'Tendencias';
 	HEADER_CATEGORY.setAttribute('id', `header__category-id-28`);
 	TITLE_CATEGORY.setAttribute('id', `category-movie__title-id-28`);
 
 	const MOVIES = await getTrendingMoviesPreview();
+
+	TITLE_CATEGORY.classList.remove('categories__category-skeleton');
 
 	setGenericMoviesList(MOVIES, GENERIC_LIST_CONTAINER, false);
 };
@@ -155,6 +219,8 @@ const goBackButton = () => {
 };
 
 const addHash = () => {
+	removeSkeleton();
+
 	const IS_REPEAT = ARRAY_HASHES.some((hash) => location.hash === hash);
 
 	if (!IS_REPEAT)
@@ -182,5 +248,6 @@ for (const BUTTON of BUTTONS_GO_BACK) {
 const ARRAY_HASHES = [ '#home', location.hash ];
 
 window.addEventListener('load', navigator, false);
+window.addEventListener('load', removeSkeleton, false);
 window.addEventListener('hashchange', addHash, false);
 window.addEventListener('hashchange', navigator, false);

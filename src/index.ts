@@ -28,6 +28,8 @@ const getCategoriesPreview = async () => {
 };
 
 export const setCategory = async (category: GenresInterface[], container: HTMLElement, isNotMovie: boolean) => {
+	container.innerHTML = '';
+
 	if (isNotMovie)
 		category = await getCategoriesPreview();
 
@@ -57,6 +59,7 @@ export const setGenericMoviesList = (movies: MovieSearchInterface[], container: 
 };
 
 const insertMovies = (movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean) => {
+	container.innerHTML = '';
 
 	for (const MOVIE of movies) {
 		const ARTICLE = document.createElement('article');

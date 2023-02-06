@@ -14,11 +14,13 @@ block main
 				button#trending-preview-header__button-id.trending-preview-header__button.main__button-see-more Ver más
 			section.carousel
 				#main__carousel-container-id.carousel-container
-					//- article.carousel__item
+					//- each items in [1, 2, 3, 4, 5, 6, 7, 8]
+					//- 	article.carousel__item-skeleton
 					//- 	+figure-img("../assets/img/Movie Img.png", "Domy img")
 
 		section#main__categories-id.main__categories.hidden
-			//- p#category-id-28.categories__category Acción
+			//- each categories in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+			//- 	div#categories__category-skeleton-id.categories__category-skeleton
 
 		section#main__movie-details-id.main__movie-details.hidden
 			//- button#movie-details__button-go-back.material-symbols-outlined.movie-details__arrow-left chevron_left
@@ -39,6 +41,8 @@ block main
 			h3.similar-movies__title Películas similares
 			section#similar-movies__carousel-scroll-id.carousel
 				#similar-movies__carousel-container-id.carousel-container
+					//- each items in [1, 2, 3, 4, 5, 6, 7, 8]
+					//- 	article.carousel__item-skeleton
 					//- article
 					//- article.carousel__item
 					//- 	+figure-img("../assets/img/Movie Img.png", "Domy img")
@@ -49,6 +53,8 @@ block main
 
 		section#main__generic-list-id.main__generic-list.hidden
 			#generic-list__container-id.generic-list__container
+				//- each items in [1, 2, 3, 4, 5, 6, 7, 8]
+				//- 		article.carousel__item-generic-list-skeleton
 				//- +figure-img("../assets/img/Movie Img.png", "Domy img").generic-list__img
 				//- +figure-img("../assets/img/Movie Img.png", "Domy img").generic-list__img
 				//- +figure-img("../assets/img/Movie Img.png", "Domy img").generic-list__img

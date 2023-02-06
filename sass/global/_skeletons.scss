@@ -1,0 +1,112 @@
+.header__arrow-left-skeleton {
+	width: 3.2rem;
+	height: 3.2rem;
+	border-radius: 0.8rem;
+	background-color: $purple-light-2;
+}
+
+.header__search-icon-skeleton {
+	width: 3.2rem;
+	height: 3.6rem;
+	border-radius: 0.8rem;
+	background-color: $purple-light-2;
+}
+
+.carousel__item-skeleton {
+	@extend .carousel__item;
+	@extend .carousel__item-img;
+
+	height: 28.5rem;
+	padding-inline-start: 0;
+	margin-inline-start: 1rem;
+	background-color: $purple-light-2;
+}
+
+.category-movie__title-skeleton {
+	display: flex;
+	gap: 1.2rem;
+
+	// width: 16rem;
+	// height: 3rem;
+	// border-radius: 0.8rem;
+	// background-color: $purple-light-2;
+
+	&::before {
+		display: inline-block;
+		content: "";
+		width: 3rem;
+		height: 3rem;
+		border-radius: 0.8rem;
+		background-color: $purple-light-2;
+
+		// margin-inline-end: 1.2rem;
+	}
+
+	&::after {
+		display: inline-block;
+		content: "";
+		width: 7rem;
+		height: 3rem;
+		border-radius: 0.8rem;
+		background-color: $purple-light-2;
+	}
+}
+
+.carousel__item-generic-list-skeleton {
+	height: 28.5rem;
+	border-radius: 1.2rem;
+	background-color: $purple-light-2;
+}
+
+.movie-details__img-skeleton {
+	display: inline-block;
+	width: 100%;
+	height: 54rem;
+	background-color: $purple-light-2;
+
+	&::before {
+		position: absolute;
+		display: block;
+		content: "";
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(180deg, rgb(0 0 0 / 35%) 19.27%, rgb(0 0 0 / 0%) 29.17%);
+	}
+}
+
+.movie-details__arrow-left-skeleton {
+	position: absolute;
+	left: 1rem;
+	top: 2rem;
+	z-index: 1;
+	width: 3.2rem;
+	height: 3.2rem;
+	border-radius: 0.8rem;
+	margin-block-end: 2.4rem;
+	background-color: $purple-light-2;
+}
+
+.data-container__title-skeleton {
+	display: inline-block;
+	width: 20rem;
+	height: 3.2rem;
+	border-radius: 0.8rem;
+	background-color: $purple-light-2;
+}
+
+.movie-details__description-skeleton {
+	width: 30rem;
+	height: 16rem;
+	border-radius: 1.2rem;
+	margin-block: 1.6rem;
+	margin-inline: auto;
+	background-color: $purple-light-2;
+}
+
+.data-container__rating-star-skeleton,
+.data-container__rating-skeleton {
+	width: 2.4rem;
+	height: 2.4rem;
+	border-radius: 0.8rem;
+	background-color: $purple-light-2;
+}

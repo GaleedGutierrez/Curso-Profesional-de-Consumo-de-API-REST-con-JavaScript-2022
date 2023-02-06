@@ -15,7 +15,7 @@
 .carousel__item {
 	display: inline-block;
 	width: 20rem;
-	padding-right: 1rem;
+	padding-inline-start: 1rem;
 	transition-property: all;
 	transition-duration: 450ms;
 	transform-origin: center left;
@@ -36,5 +36,6 @@
 
 .carousel-container .carousel__item:hover {
 	transform: scale(1.5);
+
 	// opacity: 1;
 }
