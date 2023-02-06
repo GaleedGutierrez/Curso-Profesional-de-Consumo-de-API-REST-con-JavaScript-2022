@@ -1,14 +1,14 @@
 header.header
 	section#header__main-id.header__main-header
 		h1#header__title-id.header__title PlatziMovies
-		button.material-symbols-outlined.header__arrow-left chevron_left
+		button.material-symbols-outlined.header__arrow-left.header__arrow-left-skeleton
 		form(action="")#header__search-form-id.header__form
 			label(for="search").header__label-search
 				input(type="text", name="search" placeholder="Buscar")#header__search-input-id.header__search-input
 			button(type="submit")#header__button-search-id.header__button-search
-				span.material-symbols-outlined.header__search-icon search
+				span#header__search-icon-id.material-symbols-outlined.header__search-icon.header__search-icon-skeleton
 
 	section#header__category-id.header__category-movie.hidden
-		button.material-symbols-outlined.header__arrow-left chevron_left
-		h2#category-movie__title-id.category-movie__title
+		button.material-symbols-outlined.header__arrow-left.header__arrow-left-skeleton
+		h2#category-movie__title-id.category-movie__title-skeleton
 //- .header-category-movie esto va en el tag header
