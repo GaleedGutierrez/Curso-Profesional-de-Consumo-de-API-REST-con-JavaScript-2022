@@ -15,8 +15,10 @@ export const getTrendingMoviesPreview = async (): Promise<MovieSearchInterface[]
 
 export const setImgTrending = async (): Promise<void> => {
 	const MOVIES = await getTrendingMoviesPreview();
+	const IS_CAROUSEL = true;
+	const IS_LAZY_LOADING = true;
 
-	insertMovies(MOVIES, CAROUSEL_CONTAINER, true);
+	insertMovies(MOVIES, CAROUSEL_CONTAINER, IS_CAROUSEL, IS_LAZY_LOADING);
 };
 
 const getCategoriesPreview = async () => {
@@ -53,26 +55,41 @@ export const getMoviesByCategory = async (id: string) => {
 	return MOVIES;
 };
 
-export const setGenericMoviesList = (movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean) => {
+export const setGenericMoviesList = (movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean, lazyLoading = false) => {
 	container.innerHTML = '';
-	insertMovies(movies, container, carousel);
+	insertMovies(movies, container, carousel, lazyLoading);
 };
 
-const insertMovies = (movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean) => {
+const insertMovies = (movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean, IsLazyLoading: boolean) => {
 	container.innerHTML = '';
 
 	for (const MOVIE of movies) {
 		const ARTICLE = document.createElement('article');
 		const MOVIE_IMG = `https://image.tmdb.org/t/p/w300${MOVIE.poster_path}`;
 		const ALT_IMG = MOVIE.title;
+		const FIGURE = document.createElement('figure');
+		const IMG = document.createElement('img');
 
+		FIGURE.append(IMG);
+		ARTICLE.append(FIGURE);
 		ARTICLE.addEventListener('click', () => showMovieDetails(MOVIE.id));
 
-		if (carousel) ARTICLE.setAttribute('class', 'carousel__item');
+		IMG.className = (carousel)
+			? 'generic-list__img-carousel'
+			: 'generic-list__img';
 
-		ARTICLE.innerHTML = `<figure>
-			<img class="generic-list__img" src="${MOVIE_IMG}" alt="${ALT_IMG}"/>
-		</figure>`;
+		if (carousel)
+			ARTICLE.setAttribute('class', 'carousel__item');
+		if (IsLazyLoading)
+			LAZY_LOADER.observe(IMG);
+
+		IMG.setAttribute((IsLazyLoading)
+			? 'data-alt-img'
+			: 'alt', ALT_IMG);
+		IMG.setAttribute((IsLazyLoading)
+			? 'data-src-img'
+			: 'src', MOVIE_IMG);
+
 		container.appendChild(ARTICLE);
 	}
 };
@@ -118,3 +135,28 @@ const api = axios.create({
 		api_key : API_KEY
 	}
 });
+
+// Observer
+
+const OPTIONS_OBSERVER = {
+	root       : null,
+	rootMargin : '0px 0px 0px 0px',
+	threshold  : 0.02
+};
+
+const ACTION_ON_TARGET = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+	for (let i = 0; i < entries.length; i++) {
+		const ENTRY = entries[i];
+
+		if (ENTRY.isIntersecting) {
+			const IMG = ENTRY.target;
+			const ALT = ENTRY.target.getAttribute('data-alt-img');
+			const SRC = ENTRY.target.getAttribute('data-src-img');
+
+			IMG.setAttribute('src', `${SRC}`);
+			IMG.setAttribute('alt', `${ALT}`);
+		}
+	}
+};
+
+const LAZY_LOADER = new IntersectionObserver(ACTION_ON_TARGET, OPTIONS_OBSERVER);
