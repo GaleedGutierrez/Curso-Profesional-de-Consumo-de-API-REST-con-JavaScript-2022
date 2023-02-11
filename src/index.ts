@@ -16,9 +16,8 @@ export const getTrendingMoviesPreview = async (): Promise<MovieSearchInterface[]
 export const setImgTrending = async (): Promise<void> => {
 	const MOVIES = await getTrendingMoviesPreview();
 	const IS_CAROUSEL = true;
-	const IS_LAZY_LOADING = true;
 
-	insertMovies(MOVIES, CAROUSEL_CONTAINER, IS_CAROUSEL, IS_LAZY_LOADING);
+	insertMovies(MOVIES, CAROUSEL_CONTAINER, IS_CAROUSEL);
 };
 
 const getCategoriesPreview = async () => {
@@ -55,12 +54,12 @@ export const getMoviesByCategory = async (id: string) => {
 	return MOVIES;
 };
 
-export const setGenericMoviesList = (movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean, lazyLoading = false) => {
+export const setGenericMoviesList = (movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean) => {
 	container.innerHTML = '';
-	insertMovies(movies, container, carousel, lazyLoading);
+	insertMovies(movies, container, carousel);
 };
 
-const insertMovies = (movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean, IsLazyLoading: boolean) => {
+const insertMovies = (movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean) => {
 	container.innerHTML = '';
 
 	for (const MOVIE of movies) {
@@ -78,17 +77,16 @@ const insertMovies = (movies: MovieSearchInterface[], container: HTMLElement, ca
 			? 'generic-list__img-carousel'
 			: 'generic-list__img';
 
+		IMG.addEventListener('error', (error) => {
+			IMG.src = `https://via.placeholder.com/300x450/5c218a/ffffff?text=sorry :(`;
+		});
+
 		if (carousel)
 			ARTICLE.setAttribute('class', 'carousel__item');
-		if (IsLazyLoading)
-			LAZY_LOADER.observe(IMG);
 
-		IMG.setAttribute((IsLazyLoading)
-			? 'data-alt-img'
-			: 'alt', ALT_IMG);
-		IMG.setAttribute((IsLazyLoading)
-			? 'data-src-img'
-			: 'src', MOVIE_IMG);
+		LAZY_LOADER.observe(IMG);
+		IMG.setAttribute('data-alt-img', ALT_IMG);
+		IMG.setAttribute('data-src-img', MOVIE_IMG);
 
 		container.appendChild(ARTICLE);
 	}

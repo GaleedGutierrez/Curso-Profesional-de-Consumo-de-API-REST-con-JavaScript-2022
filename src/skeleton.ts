@@ -38,6 +38,10 @@ export const removeSkeleton = () => {
 
 export const removeSkeletonGoBackButton = () => {
 	if (location.hash.startsWith('#search=') || location.hash.startsWith('#category=')) {
+		SEARCH_ICON.classList.remove('header__search-icon-skeleton');
+		SEARCH_ICON.innerText = 'search';
+		BUTTONS_GO_BACK[0].classList.remove('header__arrow-left-skeleton');
+		BUTTONS_GO_BACK[0].innerText = 'chevron_left';
 		BUTTONS_GO_BACK[1].classList.remove('header__arrow-left-skeleton');
 		BUTTONS_GO_BACK[1].innerText = 'chevron_left';
 	}
