@@ -1,6 +1,7 @@
-import { getMovieById, getMovieBySearch, getMoviesByCategory, getRelatedMoviesId, getTrendingMoviesPreview, setCategory, setGenericMoviesList, setImgTrending } from './index.js';
-import { MovieInterface, MovieSearchInterface } from './interfaces.mjs';
-import { BUTTONS_GO_BACK, BUTTON_SEARCH, BUTTON_TREADING, CAROUSEL_CONTAINER, CATEGORIES_CONTAINER, GENERIC_LIST, GENERIC_LIST_CONTAINER, HEADER_CATEGORY, HEADER_MAIN, HEADER_TITLE, MOVIE_DETAILS, SEARCH_ICON, SEARCH_INPUT, SIMILAR_MOVIES, SIMILAR_MOVIES_CAROUSEL, SIMILAR_MOVIES_SCROLL, TITLE_CATEGORY, TRENDING_PREVIEW } from './nodes.mjs';
+import { getMovieById, getMovieBySearch, getMoviesByCategory, getRelatedMoviesId, getTrendingMoviesPreview } from './getData.mjs';
+import { MovieInterface } from './interfaces.mjs';
+import { BUTTONS_GO_BACK, BUTTON_SEARCH, BUTTON_TREADING, CAROUSEL_CONTAINER, CATEGORIES_CONTAINER, GENERIC_LIST, GENERIC_LIST_CONTAINER, HEADER_CATEGORY, HEADER_MAIN, HEADER_TITLE, MOVIE_DETAILS, SEARCH_INPUT, SIMILAR_MOVIES, SIMILAR_MOVIES_CAROUSEL, SIMILAR_MOVIES_SCROLL, TITLE_CATEGORY, TRENDING_PREVIEW } from './nodes.mjs';
+import { setCategory, setGenericMoviesList, setImgTrending } from './setData.mjs';
 import { removeSkeleton, removeSkeletonGoBackButton, skeletonMovieAndCategories } from './skeleton.js';
 
 const navigator = () => {

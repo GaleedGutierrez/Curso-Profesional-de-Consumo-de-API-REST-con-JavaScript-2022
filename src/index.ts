@@ -1,66 +1,16 @@
-import API_KEY from './authentication.mjs';
-import { CAROUSEL_CONTAINER, CATEGORIES_CONTAINER, GENERIC_LIST_CONTAINER } from './nodes.mjs';
-import { CategoriesInterface, GenresInterface, MovieInterface, MovieSearchInterface, MoviesByCategoryInterface, TheMovieDBInterface } from './interfaces.mjs';
-import { AxiosResponse } from 'axios';
-// FIXME: Comentar la importación de Axios cada vez que se guarden cambios.
-// import axios from 'axios';
+import { GENERIC_LIST } from './nodes.mjs';
+import { MovieSearchInterface } from './interfaces.mjs';
+import { getPaginatedTrendingMovies } from './getData.mjs';
+import { LAZY_LOADER } from './observer.mjs';
 
-export const getTrendingMoviesPreview = async (): Promise<MovieSearchInterface[]> => {
-	const RESPONSE: AxiosResponse = await api('trending/movie/day');
-	const DATA: TheMovieDBInterface = RESPONSE.data;
-	const MOVIES = DATA.results;
+export const insertMovies = (
+	movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean,
+	{
+		clean = true
+	} = {}) => {
 
-	return MOVIES;
-};
-
-export const setImgTrending = async (): Promise<void> => {
-	const MOVIES = await getTrendingMoviesPreview();
-	const IS_CAROUSEL = true;
-
-	insertMovies(MOVIES, CAROUSEL_CONTAINER, IS_CAROUSEL);
-};
-
-const getCategoriesPreview = async () => {
-	const RESPONSE: AxiosResponse = await api(`genre/movie/list`);
-	const DATA: CategoriesInterface = RESPONSE.data;
-	const CATEGORIES = DATA.genres;
-
-	return CATEGORIES;
-};
-
-export const setCategory = async (category: GenresInterface[], container: HTMLElement, isNotMovie: boolean) => {
-	container.innerHTML = '';
-
-	if (isNotMovie)
-		category = await getCategoriesPreview();
-
-	for (const CATEGORY of category) {
-		const { id: ID, name: NAME } = CATEGORY;
-		const CATEGORY_HTML = `<a id="category-id-${ID}" class="categories__category categories__category--action" href="#category=${ID}-${NAME}">${NAME}</a>`;
-
-		container.innerHTML += CATEGORY_HTML;
-	}
-};
-
-export const getMoviesByCategory = async (id: string) => {
-	const RESPONSE: AxiosResponse = await api('discover/movie', {
-		params : {
-			with_genres : id
-		},
-	});
-	const DATA: MoviesByCategoryInterface = RESPONSE.data;
-	const MOVIES: MovieSearchInterface[] = DATA.results;
-
-	return MOVIES;
-};
-
-export const setGenericMoviesList = (movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean) => {
-	container.innerHTML = '';
-	insertMovies(movies, container, carousel);
-};
-
-const insertMovies = (movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean) => {
-	container.innerHTML = '';
+	if (clean)
+		container.innerHTML = '';
 
 	for (const MOVIE of movies) {
 		const ARTICLE = document.createElement('article');
@@ -77,7 +27,7 @@ const insertMovies = (movies: MovieSearchInterface[], container: HTMLElement, ca
 			? 'generic-list__img-carousel'
 			: 'generic-list__img';
 
-		IMG.addEventListener('error', (error) => {
+		IMG.addEventListener('error', () => {
 			IMG.src = `https://via.placeholder.com/300x450/5c218a/ffffff?text=sorry :(`;
 		});
 
@@ -90,71 +40,20 @@ const insertMovies = (movies: MovieSearchInterface[], container: HTMLElement, ca
 
 		container.appendChild(ARTICLE);
 	}
+
+	if (!carousel && clean && !IsButtonLoadMore) {
+		const BUTTON_LOAD_MORE = document.createElement('button') as HTMLButtonElement;
+
+		BUTTON_LOAD_MORE.innerText = 'CARGAR MÁS';
+		BUTTON_LOAD_MORE.className = 'generic-list__button main__button-see-more';
+		BUTTON_LOAD_MORE.addEventListener('click', getPaginatedTrendingMovies);
+		GENERIC_LIST.appendChild(BUTTON_LOAD_MORE);
+		IsButtonLoadMore = true;
+	}
 };
 
 const showMovieDetails = (id: number) => {
 	location.hash = `#movie=${id}`;
 };
 
-export const getMovieBySearch = async (query: string) => {
-	const RESPONSE: AxiosResponse = await api('search/movie', {
-		params : {
-			query
-		},
-	});
-	const DATA: MoviesByCategoryInterface = RESPONSE.data;
-	const MOVIES: MovieSearchInterface[] = DATA.results;
-
-	return MOVIES;
-};
-
-export const getMovieById = async (id: string): Promise<MovieInterface> => {
-	const RESPONSE: AxiosResponse = await api(`movie/${id}`);
-	const MOVIE: MovieInterface = RESPONSE.data;
-
-	return MOVIE;
-};
-
-export const getRelatedMoviesId = async (id: number) => {
-	const RESPONSE: AxiosResponse = await api(`/movie/${id}/recommendations`);
-	const DATA: TheMovieDBInterface = RESPONSE.data;
-	const RELATED_MOVIES = DATA.results;
-
-	return RELATED_MOVIES;
-};
-
-
-const api = axios.create({
-	baseURL : 'https://api.themoviedb.org/3/',
-	headers : {
-		'Content-Type' : 'application/json;charset=utf-8'
-	},
-	params : {
-		api_key : API_KEY
-	}
-});
-
-// Observer
-
-const OPTIONS_OBSERVER = {
-	root       : null,
-	rootMargin : '0px 0px 0px 0px',
-	threshold  : 0.02
-};
-
-const ACTION_ON_TARGET = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-	for (let i = 0; i < entries.length; i++) {
-		const ENTRY = entries[i];
-
-		if (ENTRY.isIntersecting) {
-			const IMG = ENTRY.target;
-			const ALT = ENTRY.target.getAttribute('data-alt-img');
-			const SRC = ENTRY.target.getAttribute('data-src-img');
-
-			IMG.setAttribute('src', `${SRC}`);
-			IMG.setAttribute('alt', `${ALT}`);
-		}
-	}
-};
-
-const LAZY_LOADER = new IntersectionObserver(ACTION_ON_TARGET, OPTIONS_OBSERVER);
+let IsButtonLoadMore = false;
