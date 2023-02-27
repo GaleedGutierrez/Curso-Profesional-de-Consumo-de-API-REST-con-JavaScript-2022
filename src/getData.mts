@@ -60,17 +60,62 @@ export const getRelatedMoviesId = async (id: number) => {
 };
 
 export const getPaginatedTrendingMovies = async () => {
-	const RESPONSE: AxiosResponse = await api('trending/movie/day', {
-		params : {
-			page : pageMovies
-		}
-	});
-	const DATA: TheMovieDBInterface = RESPONSE.data;
-	const MOVIES = DATA.results;
-	const IS_CAROUSEL = false;
+	const {
+		scrollTop: SCROLL_TOP,
+		scrollHeight: SCROLL_HEIGHT,
+		clientHeight: CLIENT_HEIGHT
+	} = document.documentElement;
+	const IS_SCROLL_BOTTOM = (SCROLL_TOP + CLIENT_HEIGHT) >= (SCROLL_HEIGHT - 15);
 
-	insertMovies(MOVIES, GENERIC_LIST_CONTAINER, IS_CAROUSEL, { clean: false });
-	pageMovies++;
+	if (IS_SCROLL_BOTTOM) {
+		let idCategory = '';
+		let querySearch = '';
+		const [ HASH_NAME, EXTRA_INFO ] = location.hash.split('=');
+
+		if (HASH_NAME === '#category')
+			[idCategory] = EXTRA_INFO.split('-');
+		if (HASH_NAME === '#search')
+			querySearch = EXTRA_INFO;
+
+		const RESPONSE: AxiosResponse = (HASH_NAME === '#trends')
+			? await api('trending/movie/day', {
+				params : {
+					page : pageMovies(),
+				}
+			})
+			: (HASH_NAME === '#category')
+				? await api('discover/movie', {
+					params : {
+						page        : pageMovies(),
+						with_genres : idCategory
+					}
+				})
+				: await api('search/movie', {
+					params : {
+						page  : pageMovies(),
+						query : querySearch
+					},
+				})
+			;
+
+		const DATA: TheMovieDBInterface = RESPONSE.data;
+		const MOVIES = DATA.results;
+		const IS_CAROUSEL = false;
+
+		insertMovies(MOVIES, GENERIC_LIST_CONTAINER, IS_CAROUSEL, { clean: false });
+	}
 };
 
-let pageMovies = 2;
+export const currentPageMoviesUpdate = () => {
+	let pageMovies = 1;
+
+	return function (refresh = false) {
+		pageMovies = (refresh)
+			? 1
+			: pageMovies + 1;
+
+		return pageMovies;
+	};
+};
+
+export const pageMovies = currentPageMoviesUpdate();

@@ -1,6 +1,4 @@
-import { GENERIC_LIST } from './nodes.mjs';
 import { MovieSearchInterface } from './interfaces.mjs';
-import { getPaginatedTrendingMovies } from './getData.mjs';
 import { LAZY_LOADER } from './observer.mjs';
 
 export const insertMovies = (
@@ -41,19 +39,19 @@ export const insertMovies = (
 		container.appendChild(ARTICLE);
 	}
 
-	if (!carousel && clean && !IsButtonLoadMore) {
-		const BUTTON_LOAD_MORE = document.createElement('button') as HTMLButtonElement;
+	// if (!carousel && clean && !IsButtonLoadMore) {
+	// 	const BUTTON_LOAD_MORE = document.createElement('button') as HTMLButtonElement;
 
-		BUTTON_LOAD_MORE.innerText = 'CARGAR MÁS';
-		BUTTON_LOAD_MORE.className = 'generic-list__button main__button-see-more';
-		BUTTON_LOAD_MORE.addEventListener('click', getPaginatedTrendingMovies);
-		GENERIC_LIST.appendChild(BUTTON_LOAD_MORE);
-		IsButtonLoadMore = true;
-	}
+	// 	BUTTON_LOAD_MORE.innerText = 'CARGAR MÁS';
+	// 	BUTTON_LOAD_MORE.className = 'generic-list__button main__button-see-more';
+	// 	BUTTON_LOAD_MORE.addEventListener('click', getPaginatedTrendingMovies);
+	// 	GENERIC_LIST.appendChild(BUTTON_LOAD_MORE);
+	// 	IsButtonLoadMore = true;
+	// }
 };
+// const IsButtonLoadMore = false;
 
 const showMovieDetails = (id: number) => {
 	location.hash = `#movie=${id}`;
 };
 
-let IsButtonLoadMore = false;
