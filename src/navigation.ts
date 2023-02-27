@@ -1,11 +1,14 @@
-import { getMovieById, getMovieBySearch, getMoviesByCategory, getRelatedMoviesId, getTrendingMoviesPreview } from './getData.mjs';
+import { getMovieById, getMovieBySearch, getMoviesByCategory, getPaginatedTrendingMovies, getRelatedMoviesId, getTrendingMoviesPreview, pageMovies } from './getData.mjs';
 import { MovieInterface } from './interfaces.mjs';
 import { BUTTONS_GO_BACK, BUTTON_SEARCH, BUTTON_TREADING, CAROUSEL_CONTAINER, CATEGORIES_CONTAINER, GENERIC_LIST, GENERIC_LIST_CONTAINER, HEADER_CATEGORY, HEADER_MAIN, HEADER_TITLE, MOVIE_DETAILS, SEARCH_INPUT, SIMILAR_MOVIES, SIMILAR_MOVIES_CAROUSEL, SIMILAR_MOVIES_SCROLL, TITLE_CATEGORY, TRENDING_PREVIEW } from './nodes.mjs';
 import { setCategory, setGenericMoviesList, setImgTrending } from './setData.mjs';
 import { removeSkeleton, removeSkeletonGoBackButton, skeletonMovieAndCategories } from './skeleton.js';
 
 const navigator = () => {
+	const BACK_TO_ONE = true;
+
 	window.scroll(0, 0);
+	pageMovies(BACK_TO_ONE);
 
 	const HASHES = {
 		'#trends'    : trendsPage,
@@ -149,6 +152,8 @@ const movieDetails = (isSkeleton: boolean, movie = {} as MovieInterface) => {
 
 const searchPage = async () => {
 	const ITEM_SKELETON = document.createElement('article');
+	const [ HASH_NAME, QUERY ] = location.hash.split('=');
+	const MOVIES = await getMovieBySearch(QUERY);
 
 	ITEM_SKELETON.classList.add('carousel__item-generic-list-skeleton');
 
@@ -166,19 +171,19 @@ const searchPage = async () => {
 	HEADER_MAIN.classList.remove('hidden');
 	GENERIC_LIST.classList.remove('hidden');
 
-	const [ HASH_NAME, QUERY ] = location.hash.split('=');
-	const MOVIES = await getMovieBySearch(QUERY);
-
-	if (MOVIES.length !== 0)
+	if (MOVIES.length !== 0) {
 		setGenericMoviesList(MOVIES, GENERIC_LIST_CONTAINER, false);
-
-	removeSkeletonGoBackButton();
+		removeSkeletonGoBackButton();
+	}
 };
 
 const trendsPage = async () => {
-	console.log('TRENDS');
-
 	const ITEM_SKELETON = document.createElement('article');
+	const MOVIES = await getTrendingMoviesPreview();
+	const IS_THERE_TITLE = TITLE_CATEGORY.classList.contains('category-movie__title');
+
+	if (IS_THERE_TITLE)
+		TITLE_CATEGORY.classList.remove('category-movie__title');
 
 	ITEM_SKELETON.classList.add('carousel__item-generic-list-skeleton');
 	HEADER_MAIN.classList.add('hidden');
@@ -195,17 +200,12 @@ const trendsPage = async () => {
 		GENERIC_LIST_CONTAINER.append(ITEM_SKELETON.cloneNode(true));
 	}
 
-	TITLE_CATEGORY.classList.add('categories__category-skeleton');
-
 	TITLE_CATEGORY.innerText = 'Tendencias';
 	HEADER_CATEGORY.setAttribute('id', `header__category-id-28`);
 	TITLE_CATEGORY.setAttribute('id', `category-movie__title-id-28`);
-
-	const MOVIES = await getTrendingMoviesPreview();
-
-	TITLE_CATEGORY.classList.remove('categories__category-skeleton');
-
+	TITLE_CATEGORY.classList.add('category-movie__title');
 	setGenericMoviesList(MOVIES, GENERIC_LIST_CONTAINER, false);
+	removeSkeletonGoBackButton();
 };
 
 const goBackButton = () => {
@@ -252,3 +252,5 @@ window.addEventListener('load', navigator, false);
 window.addEventListener('load', removeSkeleton, false);
 window.addEventListener('hashchange', addHash, false);
 window.addEventListener('hashchange', navigator, false);
+window.addEventListener('scroll', getPaginatedTrendingMovies);
+

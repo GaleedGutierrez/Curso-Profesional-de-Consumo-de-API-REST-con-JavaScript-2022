@@ -16,10 +16,9 @@ export const skeletonMovieAndCategories = (containerItems: HTMLElement[], movie:
 	}
 
 	if (category) {
-		const CATEGORY_SKELETON = document.createElement('div');
+		const CATEGORY_SKELETON = document.createElement('div') as HTMLElement;
 
 		CATEGORY_SKELETON.classList.add('categories__category-skeleton');
-
 
 		for (let i = 0; i < 10; i++) {
 			containerItems[1].append(CATEGORY_SKELETON.cloneNode(true));
@@ -37,7 +36,7 @@ export const removeSkeleton = () => {
 };
 
 export const removeSkeletonGoBackButton = () => {
-	if (location.hash.startsWith('#search=') || location.hash.startsWith('#category=')) {
+	if (location.hash.startsWith('#search=') || location.hash.startsWith('#category=') || location.hash.startsWith('#trends')) {
 		SEARCH_ICON.classList.remove('header__search-icon-skeleton');
 		SEARCH_ICON.innerText = 'search';
 		BUTTONS_GO_BACK[0].classList.remove('header__arrow-left-skeleton');

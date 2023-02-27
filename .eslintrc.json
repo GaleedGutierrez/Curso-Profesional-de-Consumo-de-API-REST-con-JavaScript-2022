@@ -121,6 +121,7 @@
 		"func-call-spacing": ["error", "never"],
 		"quote-props": ["error", "consistent-as-needed"],
 		"brace-style": "error",
+		"no-console": ["error", { "allow": ["warn", "error"] }], // Opcional
 		"@typescript-eslint/type-annotation-spacing": "error",
 		"@typescript-eslint/no-non-null-assertion": "warn",
 		"@typescript-eslint/indent": ["error", "tab", { "SwitchCase": 1 }],
