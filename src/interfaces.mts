@@ -1,11 +1,11 @@
-export interface TheMovieDBInterface {
+export interface InterfaceTheMovieDB {
 	page: number;
-	results: MovieSearchInterface[];
+	results: InterfaceMovieSearch[];
 	total_pages: number;
 	total_results: number;
 }
 
-export interface MovieSearchInterface {
+export interface InterfaceMovieSearch {
 	adult: boolean;
 	backdrop_path: string;
 	id: number;
@@ -14,7 +14,7 @@ export interface MovieSearchInterface {
 	original_title: string;
 	overview: string;
 	poster_path: string;
-	media_type: MediaTypeInterface;
+	media_type: EnumMediaType;
 	genre_ids: number[];
 	popularity: number;
 	release_date: Date;
@@ -23,12 +23,12 @@ export interface MovieSearchInterface {
 	vote_count: number;
 }
 
-export interface MovieInterface {
+export interface InterfaceMovie {
 	adult: boolean;
 	backdrop_path: string;
 	belongs_to_collection: null;
 	budget: number;
-	genres: GenresInterface[];
+	genres: InterfaceGenres[];
 	homepage: string;
 	id: number;
 	imdb_id: string;
@@ -37,12 +37,12 @@ export interface MovieInterface {
 	overview: string;
 	popularity: number;
 	poster_path: null;
-	production_companies: ProductionCompanyInterface[];
-	production_countries: ProductionCountryInterface[];
+	production_companies: InterfaceProductionCompany[];
+	production_countries: InterfaceProductionCountry[];
 	release_date: Date;
 	revenue: number;
 	runtime: number;
-	spoken_languages: SpokenLanguageInterface[];
+	spoken_languages: InterfaceSpokenLanguage[];
 	status: string;
 	tagline: string;
 	title: string;
@@ -51,43 +51,43 @@ export interface MovieInterface {
 	vote_count: number;
 }
 
-export enum MediaTypeInterface {
+export enum EnumMediaType {
 	MOVIE = 'movie',
 }
 
-export interface CategoriesInterface {
-	genres: GenresInterface[];
+export interface InterfaceCategories {
+	genres: InterfaceGenres[];
 }
 
-export interface GenresInterface {
+export interface InterfaceGenres {
 	id: number;
 	name: string;
 }
 
-export interface MoviesByCategoryInterface {
+export interface InterfaceMoviesByCategory {
 	page: number;
-	results: MovieSearchInterface[];
+	results: InterfaceMovieSearch[];
 	total_results: number;
 	total_pages: number;
 }
 
-export enum OriginalLanguage {
+export enum EnumOriginalLanguage {
 	EN = 'en',
 }
 
-export interface ProductionCompanyInterface {
+export interface InterfaceProductionCompany {
 	id: number;
 	logo_path: null | string;
 	name: string;
 	origin_country: string;
 }
 
-export interface ProductionCountryInterface {
+export interface InterfaceProductionCountry {
 	iso_3166_1: string;
 	name: string;
 }
 
-export interface SpokenLanguageInterface {
+export interface InterfaceSpokenLanguage {
 	iso_639_1: string;
 	name: string;
 }

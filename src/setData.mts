@@ -1,6 +1,6 @@
 import { insertMovies } from './index.js';
 import { getCategoriesPreview, getTrendingMoviesPreview } from './getData.mjs';
-import { GenresInterface, MovieSearchInterface } from './interfaces.mjs';
+import { InterfaceGenres, InterfaceMovieSearch } from './interfaces.mjs';
 import { CAROUSEL_CONTAINER } from './nodes.mjs';
 
 export const setImgTrending = async (): Promise<void> => {
@@ -10,7 +10,7 @@ export const setImgTrending = async (): Promise<void> => {
 	insertMovies(MOVIES, CAROUSEL_CONTAINER, IS_CAROUSEL);
 };
 
-export const setCategory = async (category: GenresInterface[], container: HTMLElement, isNotMovie: boolean) => {
+export const setCategory = async (category: InterfaceGenres[], container: HTMLElement, isNotMovie: boolean) => {
 	container.innerHTML = '';
 
 	if (isNotMovie)
@@ -24,7 +24,7 @@ export const setCategory = async (category: GenresInterface[], container: HTMLEl
 	}
 };
 
-export const setGenericMoviesList = (movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean) => {
+export const setGenericMoviesList = (movies: InterfaceMovieSearch[], container: HTMLElement, carousel: boolean) => {
 	container.innerHTML = '';
 	insertMovies(movies, container, carousel);
 };
