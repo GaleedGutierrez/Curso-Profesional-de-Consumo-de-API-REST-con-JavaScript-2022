@@ -1,12 +1,12 @@
 import { AxiosResponse } from 'axios';
-import { CategoriesInterface, MovieInterface, MovieSearchInterface, MoviesByCategoryInterface, TheMovieDBInterface } from './interfaces.mjs';
+import { InterfaceCategories, InterfaceMovie, InterfaceMovieSearch, InterfaceMoviesByCategory, InterfaceTheMovieDB } from './interfaces.mjs';
 import { insertMovies } from './index.js';
 import { GENERIC_LIST_CONTAINER } from './nodes.mjs';
 import { api } from './api.mjs';
 
-export const getTrendingMoviesPreview = async (): Promise<MovieSearchInterface[]> => {
+export const getTrendingMoviesPreview = async (): Promise<InterfaceMovieSearch[]> => {
 	const RESPONSE: AxiosResponse = await api('trending/movie/day');
-	const DATA: TheMovieDBInterface = RESPONSE.data;
+	const DATA: InterfaceTheMovieDB = RESPONSE.data;
 	const MOVIES = DATA.results;
 
 	return MOVIES;
@@ -14,7 +14,7 @@ export const getTrendingMoviesPreview = async (): Promise<MovieSearchInterface[]
 
 export const getCategoriesPreview = async () => {
 	const RESPONSE: AxiosResponse = await api(`genre/movie/list`);
-	const DATA: CategoriesInterface = RESPONSE.data;
+	const DATA: InterfaceCategories = RESPONSE.data;
 	const CATEGORIES = DATA.genres;
 
 	return CATEGORIES;
@@ -26,8 +26,8 @@ export const getMoviesByCategory = async (id: string) => {
 			with_genres : id
 		},
 	});
-	const DATA: MoviesByCategoryInterface = RESPONSE.data;
-	const MOVIES: MovieSearchInterface[] = DATA.results;
+	const DATA: InterfaceMoviesByCategory = RESPONSE.data;
+	const MOVIES: InterfaceMovieSearch[] = DATA.results;
 
 	return MOVIES;
 };
@@ -38,75 +38,74 @@ export const getMovieBySearch = async (query: string) => {
 			query
 		},
 	});
-	const DATA: MoviesByCategoryInterface = RESPONSE.data;
-	const MOVIES: MovieSearchInterface[] = DATA.results;
+	const DATA: InterfaceMoviesByCategory = RESPONSE.data;
+	const MOVIES: InterfaceMovieSearch[] = DATA.results;
 
 	return MOVIES;
 };
 
-export const getMovieById = async (id: string): Promise<MovieInterface> => {
+export const getMovieById = async (id: string): Promise<InterfaceMovie> => {
 	const RESPONSE: AxiosResponse = await api(`movie/${id}`);
-	const MOVIE: MovieInterface = RESPONSE.data;
+	const MOVIE: InterfaceMovie = RESPONSE.data;
 
 	return MOVIE;
 };
 
 export const getRelatedMoviesId = async (id: number) => {
 	const RESPONSE: AxiosResponse = await api(`/movie/${id}/recommendations`);
-	const DATA: TheMovieDBInterface = RESPONSE.data;
+	const DATA: InterfaceTheMovieDB = RESPONSE.data;
 	const RELATED_MOVIES = DATA.results;
 
 	return RELATED_MOVIES;
 };
 
-export const getPaginatedTrendingMovies = async () => {
+export const getPaginatedMovies = async () => {
 	const {
 		scrollTop: SCROLL_TOP,
 		scrollHeight: SCROLL_HEIGHT,
 		clientHeight: CLIENT_HEIGHT
 	} = document.documentElement;
 	const IS_SCROLL_BOTTOM = (SCROLL_TOP + CLIENT_HEIGHT) >= (SCROLL_HEIGHT - 15);
+	const IS_NOT_HOME = location.hash !== '#home';
 
-	if (IS_SCROLL_BOTTOM) {
-		let idCategory = '';
-		let querySearch = '';
-		const [ HASH_NAME, EXTRA_INFO ] = location.hash.split('=');
+	if (IS_SCROLL_BOTTOM && IS_NOT_HOME) {
+		type TypeHashName = keyof typeof HASHES_ROUTES;
+		const HASHES_ROUTES = {
+			'#trends'   : 'trending/movie/day',
+			'#category' : 'discover/movie',
+			'#search'   : 'search/movie'
+		};
+		const DATA_OF_HASH = location.hash.split('=');
+		const HASH_NAME = DATA_OF_HASH[0] as TypeHashName;
+		const EXTRA_INFO = DATA_OF_HASH[1];
+		const ROUT = HASHES_ROUTES[HASH_NAME];
+		const params = {
+			page        : pageMovies(),
+			with_genres : '',
+			query       : ''
+		};
 
-		if (HASH_NAME === '#category')
-			[idCategory] = EXTRA_INFO.split('-');
-		if (HASH_NAME === '#search')
-			querySearch = EXTRA_INFO;
+		if (HASH_NAME === '#category') {
+			const [ID_CATEGORY] = EXTRA_INFO.split('-');
 
-		const RESPONSE: AxiosResponse = (HASH_NAME === '#trends')
-			? await api('trending/movie/day', {
-				params : {
-					page : pageMovies(),
-				}
-			})
-			: (HASH_NAME === '#category')
-				? await api('discover/movie', {
-					params : {
-						page        : pageMovies(),
-						with_genres : idCategory
-					}
-				})
-				: await api('search/movie', {
-					params : {
-						page  : pageMovies(),
-						query : querySearch
-					},
-				})
-			;
+			params.with_genres = ID_CATEGORY;
+		}
 
-		const DATA: TheMovieDBInterface = RESPONSE.data;
+		if (HASH_NAME === '#search') {
+			const QUERY_SEARCH = EXTRA_INFO;
+
+			params.query = QUERY_SEARCH;
+		}
+
+		const RESPONSE: AxiosResponse = await api(ROUT, { params });
+		const DATA: InterfaceTheMovieDB = RESPONSE.data;
 		const MOVIES = DATA.results;
-		const IS_CAROUSEL = false;
 		const IS_MAX_PAGE = DATA.page > DATA.total_pages;
 
 		if (IS_MAX_PAGE) return;
 
+		const IS_CAROUSEL = false;
 
-		// console.log(DATA);
 		insertMovies(MOVIES, GENERIC_LIST_CONTAINER, IS_CAROUSEL, { clean: false });
 	}
 };

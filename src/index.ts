@@ -1,8 +1,8 @@
-import { MovieSearchInterface } from './interfaces.mjs';
+import { InterfaceMovieSearch } from './interfaces.mjs';
 import { LAZY_LOADER } from './observer.mjs';
 
 export const insertMovies = (
-	movies: MovieSearchInterface[], container: HTMLElement, carousel: boolean,
+	movies: InterfaceMovieSearch[], container: HTMLElement, carousel: boolean,
 	{
 		clean = true
 	} = {}) => {

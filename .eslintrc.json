@@ -125,7 +125,25 @@
 		"@typescript-eslint/type-annotation-spacing": "error",
 		"@typescript-eslint/no-non-null-assertion": "warn",
 		"@typescript-eslint/indent": ["error", "tab", { "SwitchCase": 1 }],
-		"@typescript-eslint/consistent-type-definitions": "warn"
-		// "hexagonal-architecture/enforce": ["error"]
-	}
+		"@typescript-eslint/consistent-type-definitions": "warn",
+		"@typescript-eslint/naming-convention": [
+			"error",
+				{
+				"selector": "typeLike",
+				"format": ["PascalCase"],
+				"prefix": ["Type"]
+				},
+				{
+				"selector": "interface",
+				"format": ["PascalCase"],
+				"prefix": ["Interface"]
+				},
+				{
+				"selector": "enum",
+				"format": ["PascalCase"],
+				"prefix": ["Enum"]
+				}
+			]
+		}
+	// "hexagonal-architecture/enforce": ["error"]
 }
