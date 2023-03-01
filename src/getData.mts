@@ -101,7 +101,12 @@ export const getPaginatedTrendingMovies = async () => {
 		const DATA: TheMovieDBInterface = RESPONSE.data;
 		const MOVIES = DATA.results;
 		const IS_CAROUSEL = false;
+		const IS_MAX_PAGE = DATA.page > DATA.total_pages;
 
+		if (IS_MAX_PAGE) return;
+
+
+		// console.log(DATA);
 		insertMovies(MOVIES, GENERIC_LIST_CONTAINER, IS_CAROUSEL, { clean: false });
 	}
 };
@@ -117,5 +122,11 @@ export const currentPageMoviesUpdate = () => {
 		return pageMovies;
 	};
 };
+
+// const waitATime = () => {
+// 	return new Promise((result, reject) => {
+// 		setTimeout(() => result, 2000);
+// 	});
+// };
 
 export const pageMovies = currentPageMoviesUpdate();
