@@ -1,5 +1,6 @@
 import { InterfaceMovieSearch } from './interfaces.mjs';
 import { LAZY_LOADER } from './observer.mjs';
+import { likeMovie } from './setData.mjs';
 
 export const insertMovies = (
 	movies: InterfaceMovieSearch[], container: HTMLElement, carousel: boolean,
@@ -29,6 +30,8 @@ export const insertMovies = (
 			LIKED_BUTTON.innerText = (IS_LIKED)
 				? 'favorite'
 				: 'favorite_border';
+
+			likeMovie(MOVIE);
 		});
 
 		const DATA_CONTAINER = `
