@@ -8,6 +8,7 @@ const ACTION_ON_TARGET = (entries: IntersectionObserverEntry[], observer: Inters
 	for (let i = 0; i < entries.length; i++) {
 		const ENTRY = entries[i];
 
+
 		if (ENTRY.isIntersecting) {
 			const IMG = ENTRY.target;
 			const ALT = ENTRY.target.getAttribute('data-alt-img');

@@ -1,4 +1,5 @@
-.carousel {
+.carousel,
+.main__liked-movie-list-carousel {
 	width: 100%;
 	padding-block: 2rem;
 	padding-inline: 1rem 3rem;
@@ -7,15 +8,18 @@
 	scroll-snap-type: x proximity;
 }
 
-.carousel-container {
+.carousel-container,
+.main__liked-movie-list-container {
 	margin-block: 7rem;
 	white-space: nowrap;
 }
 
-.carousel__item {
+.carousel__item,
+.main__liked-movie {
+	// position: relative;
 	display: inline-block;
 	width: 20rem;
-	padding-inline-start: 1rem;
+	margin-inline-start: 1rem;
 	transition-property: all;
 	transition-duration: 450ms;
 	transform-origin: center left;

@@ -1,9 +1,16 @@
+.main__categories-container {
+	margin-block: 3.2rem;
+}
+
 .main__categories {
 	display: grid;
 	gap: 0.8rem;
 	grid-template-columns: repeat(2, auto);
 	justify-content: space-around;
-	margin-block-end: 2.4rem;
+}
+
+.main__categories-title {
+	@include title-styles-h2;
 }
 
 .categories__category {

@@ -10,13 +10,17 @@
 	margin-block-end: 3.2rem;
 }
 
+.generic-list__movie-container {
+	position: relative;
+}
+
 .generic-list__img {
 	min-height: 22.5rem;
 	border-radius: 1.2rem;
 }
 
 .generic-list__img-carousel {
-	min-height: 28.5rem;
+	min-height: 30rem;
 	border-radius: 1.2rem;
 }
 

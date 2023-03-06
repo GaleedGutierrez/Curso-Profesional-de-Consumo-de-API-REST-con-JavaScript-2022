@@ -17,7 +17,7 @@ export interface InterfaceMovieSearch {
 	media_type: EnumMediaType;
 	genre_ids: number[];
 	popularity: number;
-	release_date: Date;
+	release_date: string;
 	video: boolean;
 	vote_average: number;
 	vote_count: number;
@@ -39,7 +39,7 @@ export interface InterfaceMovie {
 	poster_path: null;
 	production_companies: InterfaceProductionCompany[];
 	production_countries: InterfaceProductionCountry[];
-	release_date: Date;
+	release_date: string;
 	revenue: number;
 	runtime: number;
 	spoken_languages: InterfaceSpokenLanguage[];

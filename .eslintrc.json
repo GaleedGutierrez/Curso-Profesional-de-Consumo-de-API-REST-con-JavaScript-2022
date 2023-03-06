@@ -129,20 +129,25 @@
 		"@typescript-eslint/naming-convention": [
 			"error",
 				{
-				"selector": "typeLike",
-				"format": ["PascalCase"],
-				"prefix": ["Type"]
+					"selector": "class",
+					"format": ["PascalCase"]
 				},
 				{
-				"selector": "interface",
-				"format": ["PascalCase"],
-				"prefix": ["Interface"]
+					"selector": "typeLike",
+					"format": ["PascalCase"],
+					"prefix": ["Type"]
 				},
 				{
-				"selector": "enum",
-				"format": ["PascalCase"],
-				"prefix": ["Enum"]
+					"selector": "interface",
+					"format": ["PascalCase"],
+					"prefix": ["Interface"]
+				},
+				{
+					"selector": "enum",
+					"format": ["PascalCase"],
+					"prefix": ["Enum"]
 				}
+
 			]
 		}
 	// "hexagonal-architecture/enforce": ["error"]
