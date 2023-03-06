@@ -1,14 +1,69 @@
-import { getMovieById, getMovieBySearch, getMoviesByCategory, getPaginatedMovies, getRelatedMoviesId, getTrendingMoviesPreview, pageMovies } from './getData.mjs';
+import { getLikedMovieListFromLocalStorage, getMovieById, getMovieBySearch, getMoviesByCategory, getPaginatedMovies, getRelatedMoviesId, getTrendingMoviesPreview, numberPageMovies } from './getData.mjs';
 import { InterfaceMovie } from './interfaces.mjs';
 import { BUTTONS_GO_BACK, BUTTON_SEARCH, BUTTON_TREADING, CAROUSEL_CONTAINER, CATEGORIES_CONTAINER, CATEGORIES_SECTION, GENERIC_LIST, GENERIC_LIST_CONTAINER, HEADER_CATEGORY, HEADER_MAIN, HEADER_TITLE, LIKED_MOVIE_SECTION, MOVIE_DETAILS, SEARCH_INPUT, SIMILAR_MOVIES, SIMILAR_MOVIES_CAROUSEL, SIMILAR_MOVIES_SCROLL, TITLE_CATEGORY, TRENDING_PREVIEW } from './nodes.mjs';
-import { setCategory, setGenericMoviesList, setImgTrending } from './setData.mjs';
+import { setCategory, setGenericMoviesList, setImgTrending, setLikedMoviesFromLocalStorage } from './setData.mjs';
 import { removeSkeleton, removeSkeletonGoBackButton, skeletonMovieAndCategories } from './skeleton.js';
 
-const navigator = () => {
+// Change page
+export const showMovieDetails = (id: number): void => {
+	location.hash = `#movie=${id}`;
+};
+
+const goSearchSection = (event: Event): void => {
+	event.preventDefault();
+
+	const SEARCH = SEARCH_INPUT.value;
+
+	location.hash = `#search=${SEARCH}`;
+};
+
+BUTTON_TREADING.addEventListener('click', () => {
+	location.hash = '#trends';
+});
+
+const goBackButton = (): void => {
+	const { hash: HASH } = location;
+	const IS_HASH_HOME = HASH !== '#home';
+	const IS_LAST_NOT_HOME = ARRAY_HASHES.at(-1) !== '#home';
+
+	if (IS_HASH_HOME) ARRAY_HASHES.pop();
+
+	location.hash = (IS_LAST_NOT_HOME)
+		? `${ARRAY_HASHES.at(-1)}`
+		: '#home';
+};
+
+// Utils
+const hiddenAllElements = (): void => {
+	HEADER_CATEGORY.classList.add('hidden');
+	MOVIE_DETAILS.classList.add('hidden');
+	SIMILAR_MOVIES.classList.add('hidden');
+	GENERIC_LIST.classList.add('hidden');
+	HEADER_MAIN.classList.add('hidden');
+	TRENDING_PREVIEW.classList.add('hidden');
+	CATEGORIES_SECTION.classList.add('hidden');
+	LIKED_MOVIE_SECTION.classList.add('hidden');
+	HEADER_TITLE.classList.add('hidden');
+};
+
+export const showLikedMovieSection = (): void => {
+	LIKED_MOVIE_SECTION.classList.remove('hidden');
+	setLikedMoviesFromLocalStorage();
+};
+
+export const amountLikedMovies = (): number => {
+	const LIKED_MOVIE_LIST = getLikedMovieListFromLocalStorage();
+	const AMOUNT_LIKED_MOVIES = Object.keys(LIKED_MOVIE_LIST).length;
+
+	return AMOUNT_LIKED_MOVIES;
+};
+
+const navigator = (): void => {
 	const BACK_TO_ONE = true;
+	const { hash: HASH } = location;
 
 	window.scroll(0, 0);
-	pageMovies(BACK_TO_ONE);
+	numberPageMovies(BACK_TO_ONE);
 
 	const HASHES = {
 		'#trends'    : trendsPage,
@@ -16,10 +71,9 @@ const navigator = () => {
 		'#movie='    : moviePage,
 		'#category=' : categoryPage,
 	};
-	const HASHES_KEYS = Object.keys(HASHES);
 
-	for (const KEY of HASHES_KEYS) {
-		if (location.hash.startsWith(KEY)) {
+	for (const KEY in HASHES) {
+		if (HASH.startsWith(KEY)) {
 			HASHES[KEY as keyof typeof HASHES]();
 
 			return;
@@ -29,32 +83,31 @@ const navigator = () => {
 	homePage();
 };
 
-const homePage = async () => {
+const homePage = async (): Promise<void> => {
 	const ARE_THERE_MOVIES = true;
 	const ARE_THERE_CATEGORIES = true;
 	const ARE_THERE_CARROUSEL = true;
+	const AMOUNT_LIKED_MOVIES = amountLikedMovies();
 
-	HEADER_CATEGORY.classList.add('hidden');
-	MOVIE_DETAILS.classList.add('hidden');
-	SIMILAR_MOVIES.classList.add('hidden');
-	GENERIC_LIST.classList.add('hidden');
-
+	hiddenAllElements();
 	HEADER_MAIN.classList.remove('hidden');
 	TRENDING_PREVIEW.classList.remove('hidden');
 	CATEGORIES_SECTION.classList.remove('hidden');
 	HEADER_TITLE.classList.remove('hidden');
-	LIKED_MOVIE_SECTION.classList.remove('hidden');
 
 	skeletonMovieAndCategories([ CAROUSEL_CONTAINER, CATEGORIES_SECTION ], ARE_THERE_MOVIES, ARE_THERE_CATEGORIES, ARE_THERE_CARROUSEL);
 	await setImgTrending();
 	setCategory([], CATEGORIES_CONTAINER, true);
+
+	if (AMOUNT_LIKED_MOVIES) showLikedMovieSection();
 };
 
-const categoryPage = async () => {
+const categoryPage = async (): Promise<void> => {
+	const { hash: HASH } = location;
 	const ARE_THERE_MOVIES = true;
 	const ARE_THERE_CATEGORIES = false;
 	const ARE_THERE_CARROUSEL = false;
-	const [ HASH_NAME, CATEGORY_INFO ] = location.hash.split('=');
+	const CATEGORY_INFO = HASH.split('=')[1];
 	const [ ID, NAME ] = CATEGORY_INFO.split('-');
 	const MOVIES = await getMoviesByCategory(ID);
 	const IS_THERE_SPACE = NAME.includes('%20');
@@ -65,13 +118,7 @@ const categoryPage = async () => {
 
 	TITLE_CATEGORY.innerHTML = '';
 
-	HEADER_MAIN.classList.add('hidden');
-	MOVIE_DETAILS.classList.add('hidden');
-	SIMILAR_MOVIES.classList.add('hidden');
-	TRENDING_PREVIEW.classList.add('hidden');
-	CATEGORIES_SECTION.classList.add('hidden');
-	LIKED_MOVIE_SECTION.classList.add('hidden');
-
+	hiddenAllElements();
 	HEADER_CATEGORY.classList.remove('hidden');
 	GENERIC_LIST.classList.remove('hidden');
 
@@ -87,27 +134,19 @@ const categoryPage = async () => {
 	removeSkeletonGoBackButton();
 };
 
-const moviePage = async () => {
+const moviePage = async (): Promise<void> => {
+	const { hash: HASH } = location;
 	const THERE_IS_SKELETON = true;
 	const ARE_THERE_MOVIES = true;
 	const ARE_THERE_CATEGORIES = true;
 	const ARE_THERE_CARROUSEL = true;
-	const [ HASH_NAME, ID ] = location.hash.split('=');
+	const ID = HASH.split('=')[1];
 	const MOVIE = await getMovieById(ID);
 
 	movieDetails(THERE_IS_SKELETON);
-
-	TRENDING_PREVIEW.classList.add('hidden');
-	CATEGORIES_SECTION.classList.add('hidden');
-	GENERIC_LIST.classList.add('hidden');
-	HEADER_MAIN.classList.add('hidden');
-	HEADER_TITLE.classList.add('hidden');
-	HEADER_CATEGORY.classList.add('hidden');
-	LIKED_MOVIE_SECTION.classList.add('hidden');
-
+	hiddenAllElements();
 	SIMILAR_MOVIES.classList.remove('hidden');
 	MOVIE_DETAILS.classList.remove('hidden');
-
 	movieDetails(!THERE_IS_SKELETON, MOVIE);
 
 	const MOVIE_BUTTON_GO_BACK = document.querySelector('#movie-details__button-go-back-id') as HTMLButtonElement;
@@ -115,6 +154,7 @@ const moviePage = async () => {
 	const RELATED_MOVIES = await getRelatedMoviesId(MOVIE.id);
 
 	skeletonMovieAndCategories([ SIMILAR_MOVIES_CAROUSEL, MOVIE_CATEGORIES_CONTAINER ], ARE_THERE_MOVIES, ARE_THERE_CATEGORIES, ARE_THERE_CARROUSEL);
+
 	MOVIE_BUTTON_GO_BACK.addEventListener('click', goBackButton);
 
 	setCategory(MOVIE.genres, MOVIE_CATEGORIES_CONTAINER, false);
@@ -122,7 +162,7 @@ const moviePage = async () => {
 	SIMILAR_MOVIES_SCROLL.scroll(0, 0);
 };
 
-const movieDetails = (isSkeleton: boolean, movie = {} as InterfaceMovie) => {
+const movieDetails = (isSkeleton: boolean, movie = {} as InterfaceMovie): void => {
 	MOVIE_DETAILS.innerHTML = `${(isSkeleton)
 		? '<button class="material-icons movie-details__arrow-left-skeleton" id="movie-details__button-go-back-id"></button>'
 		: '<button class="material-icons movie-details__arrow-left" id="movie-details__button-go-back-id">chevron_left</button>'}
@@ -153,20 +193,15 @@ const movieDetails = (isSkeleton: boolean, movie = {} as InterfaceMovie) => {
 	</div>`;
 };
 
-const searchPage = async () => {
+const searchPage = async (): Promise<void> => {
+	const { hash: HASH } = location;
 	const ITEM_SKELETON = document.createElement('article');
-	const [ HASH_NAME, QUERY ] = location.hash.split('=');
+	const QUERY = HASH.split('=')[1];
 	const MOVIES = await getMovieBySearch(QUERY);
 
 	ITEM_SKELETON.classList.add('carousel__item-generic-list-skeleton');
 
-	TRENDING_PREVIEW.classList.add('hidden');
-	CATEGORIES_SECTION.classList.add('hidden');
-	HEADER_CATEGORY.classList.add('hidden');
-	SIMILAR_MOVIES.classList.add('hidden');
-	MOVIE_DETAILS.classList.add('hidden');
-	HEADER_TITLE.classList.add('hidden');
-	LIKED_MOVIE_SECTION.classList.add('hidden');
+	hiddenAllElements();
 
 	for (let i = 0; i < 10; i++) {
 		GENERIC_LIST_CONTAINER.append(ITEM_SKELETON.cloneNode(true));
@@ -181,7 +216,7 @@ const searchPage = async () => {
 	}
 };
 
-const trendsPage = async () => {
+const trendsPage = async (): Promise<void> => {
 	const ITEM_SKELETON = document.createElement('article');
 	const MOVIES = await getTrendingMoviesPreview();
 	const IS_THERE_TITLE = TITLE_CATEGORY.classList.contains('category-movie__title');
@@ -190,13 +225,7 @@ const trendsPage = async () => {
 		TITLE_CATEGORY.classList.remove('category-movie__title');
 
 	ITEM_SKELETON.classList.add('carousel__item-generic-list-skeleton');
-	HEADER_MAIN.classList.add('hidden');
-	TRENDING_PREVIEW.classList.add('hidden');
-	CATEGORIES_SECTION.classList.add('hidden');
-	SIMILAR_MOVIES.classList.add('hidden');
-	MOVIE_DETAILS.classList.add('hidden');
-	HEADER_TITLE.classList.add('hidden');
-	LIKED_MOVIE_SECTION.classList.add('hidden');
+	hiddenAllElements();
 
 	HEADER_CATEGORY.classList.remove('hidden');
 	GENERIC_LIST.classList.remove('hidden');
@@ -213,49 +242,27 @@ const trendsPage = async () => {
 	removeSkeletonGoBackButton();
 };
 
-const goBackButton = () => {
-	const IS_HASH_HOME = location.hash !== '#home';
-	const IS_LAST_NOT_HOME = ARRAY_HASHES.at(-1) !== '#home';
+const addHash = (): void => {
+	const { hash: HASH } = location;
 
-	if (IS_HASH_HOME) ARRAY_HASHES.pop();
-
-	location.hash = (IS_LAST_NOT_HOME)
-		? `${ARRAY_HASHES.at(-1)}`
-		: '#home';
-};
-
-const addHash = () => {
 	removeSkeleton();
 
-	const IS_REPEAT = ARRAY_HASHES.some((hash) => location.hash === hash);
+	const IS_REPEAT = ARRAY_HASHES.some((hash) => HASH === hash);
 
 	if (!IS_REPEAT)
-		ARRAY_HASHES.push(location.hash);
+		ARRAY_HASHES.push(HASH);
 };
-
-const goSearchSection = (event: Event) => {
-	event.preventDefault();
-
-	const SEARCH = SEARCH_INPUT.value;
-
-	location.hash = `#search=${SEARCH}`;
-};
-
-BUTTON_TREADING.addEventListener('click', () => {
-	location.hash = '#trends';
-});
-
-BUTTON_SEARCH.addEventListener('click', goSearchSection);
 
 for (const BUTTON of BUTTONS_GO_BACK) {
 	BUTTON.addEventListener('click', goBackButton);
 }
 
-const ARRAY_HASHES = [ '#home', location.hash ];
+const { hash: HASH } = location;
+const ARRAY_HASHES = [ '#home', HASH ];
 
+BUTTON_SEARCH.addEventListener('click', goSearchSection);
 window.addEventListener('load', navigator, false);
 window.addEventListener('load', removeSkeleton, false);
 window.addEventListener('hashchange', addHash, false);
 window.addEventListener('hashchange', navigator, false);
 window.addEventListener('scroll', getPaginatedMovies);
-

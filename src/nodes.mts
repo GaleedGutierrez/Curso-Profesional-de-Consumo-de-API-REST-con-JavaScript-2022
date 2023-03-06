@@ -35,4 +35,5 @@ export const GENERIC_LIST = $('#main__generic-list-id') as HTMLElement;
 export const GENERIC_LIST_CONTAINER = $('#generic-list__container-id') as HTMLElement;
 
 // Liked Movies
-export const LIKED_MOVIE_SECTION = $('#main__liked-container-id') as HTMLElement;
+export const LIKED_MOVIE_SECTION = $('#main__liked-section-id') as HTMLElement;
+export const LIKED_MOVIE_CONTAINER = $('#main__liked-movie-list-container-id') as HTMLElement;

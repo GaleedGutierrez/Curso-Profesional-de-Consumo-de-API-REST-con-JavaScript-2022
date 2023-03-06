@@ -91,3 +91,7 @@ export interface InterfaceSpokenLanguage {
 	iso_639_1: string;
 	name: string;
 }
+
+export interface InterfaceLikeMovie {
+	[key: number]: InterfaceMovieSearch | undefined;
+}
