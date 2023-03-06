@@ -19,6 +19,7 @@ export const CAROUSEL_CONTAINER = $('#main__carousel-container-id') as HTMLDivEl
 export const BUTTON_TREADING = $('#trending-preview-header__button-id') as HTMLButtonElement;
 
 // Categories section
+export const CATEGORIES_SECTION = $('#main__categories-container-id') as HTMLElement;
 export const CATEGORIES_CONTAINER = $('#main__categories-id') as HTMLElement;
 
 // Movie details section
@@ -33,3 +34,5 @@ export const SIMILAR_MOVIES_SCROLL = $('#similar-movies__carousel-scroll-id') as
 export const GENERIC_LIST = $('#main__generic-list-id') as HTMLElement;
 export const GENERIC_LIST_CONTAINER = $('#generic-list__container-id') as HTMLElement;
 
+// Liked Movies
+export const LIKED_MOVIE_SECTION = $('#main__liked-container-id') as HTMLElement;

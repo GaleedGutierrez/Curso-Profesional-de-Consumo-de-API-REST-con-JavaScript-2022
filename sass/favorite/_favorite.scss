@@ -1,0 +1,54 @@
+.main__liked-title {
+	@include title-styles-h2;
+}
+
+.liked-movie__data {
+	position: absolute;
+	opacity: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 1.2rem;
+	background: linear-gradient(to top, rgba($purple-dark-2, $alpha: 90%) 0%, rgb($purple-dark-2, $alpha: 0%) 100%);
+	color: $purple-light-1;
+	white-space: normal;
+}
+
+.liked-movie__data:hover {
+	opacity: 1;
+}
+
+.liked-movie__button {
+	position: absolute;
+	top: 3%;
+	right: 3%;
+	z-index: 1;
+	padding: 0.4rem;
+	border-radius: 50%;
+	background-color: $purple-medium-1;
+	color: $purple-light-1;
+
+	&:active {
+		background-color: $purple-dark-1;
+	}
+}
+
+.liked-movie__button--liked {
+	background-color: $purple-medium-2;
+}
+
+.liked-movie__data-container {
+	position: absolute;
+	bottom: 0;
+	padding-block-end: 1.2rem;
+	padding-inline: 0.8rem;
+}
+
+.liked-movie__title {
+	line-height: normal;
+}
+
+.liked-movie__info-movie-container {
+	display: flex;
+	gap: 0.4rem;
+	align-items: center;
+}

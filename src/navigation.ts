@@ -1,6 +1,6 @@
 import { getMovieById, getMovieBySearch, getMoviesByCategory, getPaginatedMovies, getRelatedMoviesId, getTrendingMoviesPreview, pageMovies } from './getData.mjs';
 import { InterfaceMovie } from './interfaces.mjs';
-import { BUTTONS_GO_BACK, BUTTON_SEARCH, BUTTON_TREADING, CAROUSEL_CONTAINER, CATEGORIES_CONTAINER, GENERIC_LIST, GENERIC_LIST_CONTAINER, HEADER_CATEGORY, HEADER_MAIN, HEADER_TITLE, MOVIE_DETAILS, SEARCH_INPUT, SIMILAR_MOVIES, SIMILAR_MOVIES_CAROUSEL, SIMILAR_MOVIES_SCROLL, TITLE_CATEGORY, TRENDING_PREVIEW } from './nodes.mjs';
+import { BUTTONS_GO_BACK, BUTTON_SEARCH, BUTTON_TREADING, CAROUSEL_CONTAINER, CATEGORIES_CONTAINER, CATEGORIES_SECTION, GENERIC_LIST, GENERIC_LIST_CONTAINER, HEADER_CATEGORY, HEADER_MAIN, HEADER_TITLE, LIKED_MOVIE_SECTION, MOVIE_DETAILS, SEARCH_INPUT, SIMILAR_MOVIES, SIMILAR_MOVIES_CAROUSEL, SIMILAR_MOVIES_SCROLL, TITLE_CATEGORY, TRENDING_PREVIEW } from './nodes.mjs';
 import { setCategory, setGenericMoviesList, setImgTrending } from './setData.mjs';
 import { removeSkeleton, removeSkeletonGoBackButton, skeletonMovieAndCategories } from './skeleton.js';
 
@@ -41,10 +41,11 @@ const homePage = async () => {
 
 	HEADER_MAIN.classList.remove('hidden');
 	TRENDING_PREVIEW.classList.remove('hidden');
-	CATEGORIES_CONTAINER.classList.remove('hidden');
+	CATEGORIES_SECTION.classList.remove('hidden');
 	HEADER_TITLE.classList.remove('hidden');
+	LIKED_MOVIE_SECTION.classList.remove('hidden');
 
-	skeletonMovieAndCategories([ CAROUSEL_CONTAINER, CATEGORIES_CONTAINER ], ARE_THERE_MOVIES, ARE_THERE_CATEGORIES, ARE_THERE_CARROUSEL);
+	skeletonMovieAndCategories([ CAROUSEL_CONTAINER, CATEGORIES_SECTION ], ARE_THERE_MOVIES, ARE_THERE_CATEGORIES, ARE_THERE_CARROUSEL);
 	await setImgTrending();
 	setCategory([], CATEGORIES_CONTAINER, true);
 };
@@ -68,7 +69,8 @@ const categoryPage = async () => {
 	MOVIE_DETAILS.classList.add('hidden');
 	SIMILAR_MOVIES.classList.add('hidden');
 	TRENDING_PREVIEW.classList.add('hidden');
-	CATEGORIES_CONTAINER.classList.add('hidden');
+	CATEGORIES_SECTION.classList.add('hidden');
+	LIKED_MOVIE_SECTION.classList.add('hidden');
 
 	HEADER_CATEGORY.classList.remove('hidden');
 	GENERIC_LIST.classList.remove('hidden');
@@ -96,11 +98,12 @@ const moviePage = async () => {
 	movieDetails(THERE_IS_SKELETON);
 
 	TRENDING_PREVIEW.classList.add('hidden');
-	CATEGORIES_CONTAINER.classList.add('hidden');
+	CATEGORIES_SECTION.classList.add('hidden');
 	GENERIC_LIST.classList.add('hidden');
 	HEADER_MAIN.classList.add('hidden');
 	HEADER_TITLE.classList.add('hidden');
 	HEADER_CATEGORY.classList.add('hidden');
+	LIKED_MOVIE_SECTION.classList.add('hidden');
 
 	SIMILAR_MOVIES.classList.remove('hidden');
 	MOVIE_DETAILS.classList.remove('hidden');
@@ -121,8 +124,8 @@ const moviePage = async () => {
 
 const movieDetails = (isSkeleton: boolean, movie = {} as InterfaceMovie) => {
 	MOVIE_DETAILS.innerHTML = `${(isSkeleton)
-		? '<button class="material-symbols-outlined movie-details__arrow-left-skeleton" id="movie-details__button-go-back-id"></button>'
-		: '<button class="material-symbols-outlined movie-details__arrow-left" id="movie-details__button-go-back-id">chevron_left</button>'}
+		? '<button class="material-icons movie-details__arrow-left-skeleton" id="movie-details__button-go-back-id"></button>'
+		: '<button class="material-icons movie-details__arrow-left" id="movie-details__button-go-back-id">chevron_left</button>'}
 	${(isSkeleton)
 		? '<figure class="movie-details__img-skeleton"></figure>'
 		: `<figure class="movie-details__img">
@@ -136,7 +139,7 @@ const movieDetails = (isSkeleton: boolean, movie = {} as InterfaceMovie) => {
 			<div class="data-container__rating-container">
 				${(isSkeleton)
 		? '<p class="material-symbols-outlined data-container__rating-star-skeleton"></p>'
-		: '<p class="material-symbols-outlined data-container__rating-star">star</p>'}
+		: '<p class="material-icons data-container__rating-star">star</p>'}
 				${(isSkeleton)
 		? '<p class="data-container__rating-skeleton"></p>'
 		: `<p class="data-container__rating">${movie.vote_average.toFixed(2)}</p>`}
@@ -158,11 +161,12 @@ const searchPage = async () => {
 	ITEM_SKELETON.classList.add('carousel__item-generic-list-skeleton');
 
 	TRENDING_PREVIEW.classList.add('hidden');
-	CATEGORIES_CONTAINER.classList.add('hidden');
+	CATEGORIES_SECTION.classList.add('hidden');
 	HEADER_CATEGORY.classList.add('hidden');
 	SIMILAR_MOVIES.classList.add('hidden');
 	MOVIE_DETAILS.classList.add('hidden');
 	HEADER_TITLE.classList.add('hidden');
+	LIKED_MOVIE_SECTION.classList.add('hidden');
 
 	for (let i = 0; i < 10; i++) {
 		GENERIC_LIST_CONTAINER.append(ITEM_SKELETON.cloneNode(true));
@@ -188,10 +192,11 @@ const trendsPage = async () => {
 	ITEM_SKELETON.classList.add('carousel__item-generic-list-skeleton');
 	HEADER_MAIN.classList.add('hidden');
 	TRENDING_PREVIEW.classList.add('hidden');
-	CATEGORIES_CONTAINER.classList.add('hidden');
+	CATEGORIES_SECTION.classList.add('hidden');
 	SIMILAR_MOVIES.classList.add('hidden');
 	MOVIE_DETAILS.classList.add('hidden');
 	HEADER_TITLE.classList.add('hidden');
+	LIKED_MOVIE_SECTION.classList.add('hidden');
 
 	HEADER_CATEGORY.classList.remove('hidden');
 	GENERIC_LIST.classList.remove('hidden');

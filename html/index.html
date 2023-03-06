@@ -7,7 +7,7 @@
     <meta name="description" content="Página para consultar sobre películas y series.">
     <meta name="robots" content="index,follow">
     <link rel="shortcut icon" href="../assets/logo/flaticoin.webp" type="image/x-icon">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css"/>
     <link rel="stylesheet" href="../css/desktop.css" media="screen and (min-width:800px)"/>
     <title>Platzi Movies</title>
@@ -16,16 +16,16 @@
     <header class="header">
       <section class="header__main-header" id="header__main-id">
         <h1 class="header__title" id="header__title-id">PlatziMovies</h1>
-        <button class="material-symbols-outlined header__arrow-left header__arrow-left-skeleton"></button>
+        <button class="material-icons header__arrow-left header__arrow-left-skeleton"></button>
         <form class="header__form" action="" id="header__search-form-id">
           <label class="header__label-search" for="search">
             <input class="header__search-input" type="text" name="search" placeholder="Buscar" id="header__search-input-id">
           </label>
-          <button class="header__button-search" type="submit" id="header__button-search-id"><span class="material-symbols-outlined header__search-icon header__search-icon-skeleton" id="header__search-icon-id"></span></button>
+          <button class="header__button-search" type="submit" id="header__button-search-id"><span class="material-icons header__search-icon header__search-icon-skeleton" id="header__search-icon-id"></span></button>
         </form>
       </section>
       <section class="header__category-movie hidden" id="header__category-id">
-        <button class="material-symbols-outlined header__arrow-left header__arrow-left-skeleton"></button>
+        <button class="material-icons header__arrow-left header__arrow-left-skeleton"></button>
         <h2 class="category-movie__title-skeleton" id="category-movie__title-id"></h2>
       </section>
     </header>
@@ -39,7 +39,23 @@
           <div class="carousel-container" id="main__carousel-container-id"></div>
         </section>
       </section>
-      <section class="main__categories hidden" id="main__categories-id"></section>
+      <section class="main__categories-container hidden" id="main__categories-container-id">
+        <h2 class="main__categories-title">Categorías</h2>
+        <div class="main__categories" id="main__categories-id"></div>
+      </section>
+      <section class="main__liked-container hidden" id="main__liked-container-id">
+        <h2 class="main__liked-title">Películas favoritas</h2>
+        <div class="main__liked-movie-list-carousel">
+          <div class="main__liked-movie-list-container">
+            <article class="main__liked-movie">
+              <figure><img src="../assets/../assets/img/Movie Img.png" alt="Domy img"/></figure>
+            </article>
+            <article class="main__liked-movie">
+              <figure><img src="../assets/../assets/img/Movie Img.png" alt="Domy img"/></figure>
+            </article>
+          </div>
+        </div>
+      </section>
       <section class="main__movie-details hidden" id="main__movie-details-id"></section>
       <section class="main__similar-movies hidden" id="main__similar-movies-id">
         <h3 class="similar-movies__title">Películas similares</h3>

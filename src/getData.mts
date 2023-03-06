@@ -66,9 +66,10 @@ export const getPaginatedMovies = async () => {
 		clientHeight: CLIENT_HEIGHT
 	} = document.documentElement;
 	const IS_SCROLL_BOTTOM = (SCROLL_TOP + CLIENT_HEIGHT) >= (SCROLL_HEIGHT - 15);
-	const IS_NOT_HOME = location.hash !== '#home';
+	const [HASH] = location.hash.split('=');
+	const IS_NOT_HOME_AND_MOVIE = HASH !== '#home' && HASH !== '#movie';
 
-	if (IS_SCROLL_BOTTOM && IS_NOT_HOME) {
+	if (IS_SCROLL_BOTTOM && IS_NOT_HOME_AND_MOVIE) {
 		type TypeHashName = keyof typeof HASHES_ROUTES;
 		const HASHES_ROUTES = {
 			'#trends'   : 'trending/movie/day',

@@ -18,9 +18,30 @@ block main
 					//- 	article.carousel__item-skeleton
 					//- 	+figure-img("../assets/img/Movie Img.png", "Domy img")
 
-		section#main__categories-id.main__categories.hidden
+		section#main__categories-container-id.main__categories-container.hidden
+			h2.main__categories-title Categorías
+			#main__categories-id.main__categories
 			//- each categories in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 			//- 	div#categories__category-skeleton-id.categories__category-skeleton
+
+		section#main__liked-container-id.main__liked-container.hidden
+			h2.main__liked-title Películas favoritas
+			.main__liked-movie-list-carousel
+				.main__liked-movie-list-container
+					article.main__liked-movie
+						+figure-img("../assets/img/Movie Img.png", "Domy img")
+					article.main__liked-movie
+						+figure-img("../assets/img/Movie Img.png", "Domy img")
+					//- article.main__liked-movie
+					//- 	+figure-img("../assets/img/Movie Img.png", "Domy img")
+					//- article.main__liked-movie
+					//- 	+figure-img("../assets/img/Movie Img.png", "Domy img")
+					//- article.main__liked-movie
+					//- 	+figure-img("../assets/img/Movie Img.png", "Domy img")
+					//- article.main__liked-movie
+					//- 	+figure-img("../assets/img/Movie Img.png", "Domy img")
+					//- article.main__liked-movie
+					//- 	+figure-img("../assets/img/Movie Img.png", "Domy img")
 
 		section#main__movie-details-id.main__movie-details.hidden
 			//- button#movie-details__button-go-back.material-symbols-outlined.movie-details__arrow-left chevron_left
