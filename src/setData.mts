@@ -28,3 +28,26 @@ export const setGenericMoviesList = (movies: InterfaceMovieSearch[], container: 
 	container.innerHTML = '';
 	insertMovies(movies, container, carousel);
 };
+
+export const likeMovie = (movie: InterfaceMovieSearch) => {
+	const ID = movie.id;
+	const LIKED_MOVIE_LIST = likedMovieList();
+	const IS_REPEAT = LIKED_MOVIE_LIST[ID];
+
+	LIKED_MOVIE_LIST[ID] = (IS_REPEAT)
+		? undefined
+		: movie;
+
+	const LIKED_MOVIE_LIST_STRING = JSON.stringify(LIKED_MOVIE_LIST);
+
+	localStorage.setItem('liked-movie', LIKED_MOVIE_LIST_STRING);
+};
+
+const likedMovieList = () => {
+	const MOVIES_LIST = localStorage.getItem('liked-movie');
+	const MOVIES = (MOVIES_LIST)
+		? JSON.parse(MOVIES_LIST)
+		: {};
+
+	return MOVIES;
+};
