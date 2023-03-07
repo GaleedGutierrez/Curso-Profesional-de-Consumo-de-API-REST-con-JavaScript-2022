@@ -1,9 +1,9 @@
 import { getLikedMovieListFromLocalStorage } from './getData.mjs';
 import { InterfaceMovieSearch } from './interfaces.mjs';
 import { amountLikedMovies, showLikedMovieSection, showMovieDetails } from './navigation.js';
-import { LIKED_MOVIE_SECTION } from './nodes.mjs';
+import { $$, LIKED_MOVIE_SECTION } from './nodes.mjs';
 import { LAZY_LOADER } from './observer.mjs';
-import { setLikeMovieOnLocalStorage } from './setData.mjs';
+import { setImgTrending, saveLikeMovieOnLocalStorage } from './setData.mjs';
 
 export const insertMovies = (
 	movies: InterfaceMovieSearch[], container: HTMLElement, carousel: boolean,
@@ -65,13 +65,13 @@ const createMovieBox = (movie: InterfaceMovieSearch, container: HTMLElement, car
 	LIKED_BUTTON.innerText = (IS_LIKED)
 		? 'favorite'
 		: 'favorite_border';
-	DATA_CONTAINER.setAttribute('id', `liked-movie__data-id-${counterMovies}`);
+	LIKED_BUTTON.setAttribute('data-id', ID.toString());
 	DATA_CONTAINER.className = 'liked-movie__data';
 
 	// addEventListers
 	IMG.addEventListener('error', () => IMG.src = `https://via.placeholder.com/300x450/8b48bf/ffffff?text=sorry :(`
 	);
-	LIKED_BUTTON.addEventListener('click', () => clickLikeButton(LIKED_BUTTON, movie));
+	LIKED_BUTTON.addEventListener('click', () => clickLikeButton(LIKED_BUTTON, movie, container));
 	DATA_CONTAINER.addEventListener('click', () => showMovieDetails(movie.id));
 
 	// Append elements
@@ -90,30 +90,38 @@ const createMovieBox = (movie: InterfaceMovieSearch, container: HTMLElement, car
 	container.appendChild(ARTICLE);
 
 	LAZY_LOADER.observe(IMG);
-	counterMovies++;
 };
 
-const clickLikeButton = (likedButton: HTMLButtonElement, movie: InterfaceMovieSearch): void => {
-	const { hash: HASH } = location;
-
+const clickLikeButton = (likedButton: HTMLButtonElement, movie: InterfaceMovieSearch, container: HTMLElement): void => {
 	likedButton.classList.toggle('liked-movie__button--liked');
 
+	const { hash: HASH } = location;
 	const IS_LIKED = likedButton.classList.contains('liked-movie__button--liked');
+	const IS_HOME = HASH === '#home';
+	const CONTAINER_ID = container.getAttribute('id');
+	const IS_CLICK_ON_FAVORITE_SECTION = CONTAINER_ID === 'main__liked-movie-list-container-id';
 
 	likedButton.innerText = (IS_LIKED)
 		? 'favorite'
 		: 'favorite_border';
 
-	setLikeMovieOnLocalStorage(movie);
+	saveLikeMovieOnLocalStorage(movie);
 
-	const AMOUNT_LIKED_MOVIES = amountLikedMovies();
+	const AMOUNT_MOVIES_NOT_ZERO = amountLikedMovies() !== 0;
 
-	if (AMOUNT_LIKED_MOVIES && HASH === '#home') {
+	if (AMOUNT_MOVIES_NOT_ZERO && IS_HOME) {
 		showLikedMovieSection();
 	} else {
 		LIKED_MOVIE_SECTION.classList.add('hidden');
 	}
-};
 
-let counterMovies = 0;
-// const IsButtonLoadMore = false;
+	if (IS_CLICK_ON_FAVORITE_SECTION) {
+		const LIKED_BUTTON_ID = likedButton.getAttribute('data-id');
+		const NODES_LIKED_BUTTON_TRENDS = $$('#main__carousel-container-id .liked-movie__button--liked') as NodeListOf<HTMLButtonElement>;
+		const LIKED_BUTTON_TRENDS = Array.from(NODES_LIKED_BUTTON_TRENDS) as HTMLButtonElement[];
+		const BUTTON_SIMILAR = LIKED_BUTTON_TRENDS.find((btn: HTMLButtonElement) => btn.getAttribute('data-id') === LIKED_BUTTON_ID) as HTMLButtonElement;
+
+		BUTTON_SIMILAR.classList.remove('liked-movie__button--liked');
+		BUTTON_SIMILAR.innerText = 'favorite_border';
+	}
+};

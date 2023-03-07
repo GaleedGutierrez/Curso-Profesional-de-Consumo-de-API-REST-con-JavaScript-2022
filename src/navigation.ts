@@ -99,7 +99,7 @@ const homePage = async (): Promise<void> => {
 	await setImgTrending();
 	setCategory([], CATEGORIES_CONTAINER, true);
 
-	if (AMOUNT_LIKED_MOVIES) showLikedMovieSection();
+	if (AMOUNT_LIKED_MOVIES !== 0) showLikedMovieSection();
 };
 
 const categoryPage = async (): Promise<void> => {

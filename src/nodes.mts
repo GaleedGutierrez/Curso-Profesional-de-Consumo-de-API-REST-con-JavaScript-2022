@@ -1,6 +1,6 @@
 /* eslint-disable padding-line-between-statements */
 const $ = (selector: string) => document.querySelector(selector);
-const $$ = (selector: string) => document.querySelectorAll(selector);
+export const $$ = (selector: string) => document.querySelectorAll(selector);
 
 // Header
 export const HEADER_MAIN = $('#header__main-id') as HTMLElement;
