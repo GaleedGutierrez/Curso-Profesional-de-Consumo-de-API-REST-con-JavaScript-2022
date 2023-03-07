@@ -116,7 +116,7 @@
 		"no-unneeded-ternary": "error",
 		"new-cap": "error",
 		"no-lone-blocks": "error",
-		"camelcase": ["error", {"properties": "never" ,"ignoreDestructuring": true}],
+		// "camelcase": ["error", {"properties": "never" ,"ignoreDestructuring": true}] // Opcional
 		"space-in-parens": ["error", "never"],
 		"func-call-spacing": ["error", "never"],
 		"quote-props": ["error", "consistent-as-needed"],

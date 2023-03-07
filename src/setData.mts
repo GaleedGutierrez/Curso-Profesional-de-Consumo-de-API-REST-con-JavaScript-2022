@@ -2,7 +2,7 @@ import { insertMovies } from './index.js';
 import { getCategoriesPreview, getLikedMovieListFromLocalStorage, getTrendingMoviesPreview, numberPageMovies } from './getData.mjs';
 import { InterfaceGenres, InterfaceLikeMovie, InterfaceMovieSearch, InterfaceTheMovieDB } from './interfaces.mjs';
 import { CAROUSEL_CONTAINER, GENERIC_LIST_CONTAINER, LIKED_MOVIE_CONTAINER } from './nodes.mjs';
-import { AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { api } from './api.mjs';
 import { TypeHashName } from './types.mjs';
 
@@ -35,10 +35,12 @@ export const setGenericMoviesList = (movies: InterfaceMovieSearch[], container: 
 export const setPaginatedMovieByScroll = async (): Promise<void> => {
 	const { hash: HASH } = location;
 	let rout = '';
-	const params = {
-		page        : numberPageMovies(),
-		with_genres : '',
-		query       : ''
+	const config: AxiosRequestConfig = {
+		params : {
+			page        : numberPageMovies(),
+			with_genres : '',
+			query       : ''
+		}
 	};
 	const [ HASH_NAME, EXTRA_INFO ] = HASH.split('=');
 	const HASHES_ROUTES = {
@@ -47,19 +49,19 @@ export const setPaginatedMovieByScroll = async (): Promise<void> => {
 			const [ID_CATEGORY] = EXTRA_INFO.split('-');
 
 			rout = 'discover/movie';
-			params.with_genres = ID_CATEGORY;
+			config.params.with_genres = ID_CATEGORY;
 		},
 		'#search' : () => {
 			const QUERY_SEARCH = EXTRA_INFO;
 
 			rout = 'search/movie';
-			params.query = QUERY_SEARCH;
+			config.params.query = QUERY_SEARCH;
 		}
 	};
 
 	HASHES_ROUTES[HASH_NAME as TypeHashName]();
 
-	const RESPONSE: AxiosResponse = await api(rout, { params });
+	const RESPONSE: AxiosResponse = await api(rout, config);
 	const DATA: InterfaceTheMovieDB = RESPONSE.data;
 	const MOVIES = DATA.results;
 	const IS_MAX_PAGE = DATA.page > DATA.total_pages;

@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { InterfaceCategories, InterfaceGenres, InterfaceLikeMovie, InterfaceMovie, InterfaceMovieSearch, InterfaceMoviesByCategory, InterfaceTheMovieDB } from './interfaces.mjs';
 import { api } from './api.mjs';
 import { setPaginatedMovieByScroll } from './setData.mjs';
@@ -20,10 +20,12 @@ export const getCategoriesPreview = async (): Promise<InterfaceGenres[]> => {
 };
 
 export const getMoviesByCategory = async (id: string): Promise<InterfaceMovieSearch[]> => {
-	const params = {
-		with_genres : id
+	const config: AxiosRequestConfig = {
+		params : {
+			with_genres : id
+		}
 	};
-	const RESPONSE: AxiosResponse = await api('discover/movie', { params });
+	const RESPONSE: AxiosResponse = await api('discover/movie', config);
 	const DATA: InterfaceMoviesByCategory = RESPONSE.data;
 	const MOVIES: InterfaceMovieSearch[] = DATA.results;
 
@@ -31,10 +33,12 @@ export const getMoviesByCategory = async (id: string): Promise<InterfaceMovieSea
 };
 
 export const getMovieBySearch = async (query: string): Promise<InterfaceMovieSearch[]> => {
-	const params = {
-		query
+	const config: AxiosRequestConfig = {
+		params : {
+			query
+		}
 	};
-	const RESPONSE: AxiosResponse = await api('search/movie', { params });
+	const RESPONSE: AxiosResponse = await api('search/movie', config);
 	const DATA: InterfaceMoviesByCategory = RESPONSE.data;
 	const MOVIES: InterfaceMovieSearch[] = DATA.results;
 

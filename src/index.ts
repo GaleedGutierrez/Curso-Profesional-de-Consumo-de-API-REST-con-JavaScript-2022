@@ -1,9 +1,12 @@
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getLikedMovieListFromLocalStorage } from './getData.mjs';
-import { InterfaceMovieSearch } from './interfaces.mjs';
+import { InterfaceAccount, InterfaceMovieSearch, InterfaceSessionApi, InterfaceStatusPostFavoriteMovie, InterfaceTheMovieDB, InterfaceTokenApi } from './interfaces.mjs';
 import { amountLikedMovies, showLikedMovieSection, showMovieDetails } from './navigation.js';
 import { $$, LIKED_MOVIE_SECTION } from './nodes.mjs';
 import { LAZY_LOADER } from './observer.mjs';
-import { setImgTrending, saveLikeMovieOnLocalStorage } from './setData.mjs';
+import { saveLikeMovieOnLocalStorage } from './setData.mjs';
+import { API_KEY, SESSION_ID, request_token } from './authentication.mjs';
+import { api } from './api.mjs';
 
 export const insertMovies = (
 	movies: InterfaceMovieSearch[], container: HTMLElement, carousel: boolean,
@@ -125,3 +128,80 @@ const clickLikeButton = (likedButton: HTMLButtonElement, movie: InterfaceMovieSe
 		BUTTON_SIMILAR.innerText = 'favorite_border';
 	}
 };
+
+const getRequestToken = async (): Promise<string> => {
+	const RESPONSE: AxiosResponse = await api('authentication/token/new');
+	const DATA: InterfaceTokenApi = RESPONSE.data;
+	const REQUEST_TOKEN = DATA.request_token;
+
+	return REQUEST_TOKEN;
+};
+
+const getSession = async () => {
+	const config: AxiosRequestConfig = {
+		params : { request_token }
+	};
+	// *Tenemos que aceptar, en nuestra cuenta de The Movie DB, la autenticación de terceros en https://www.themoviedb.org/authenticate/{request_token}
+	const RESPONSE: AxiosResponse = await api('authentication/session/new', config);
+	const DATA: InterfaceSessionApi = RESPONSE.data;
+	const SESSION_ID = DATA.session_id;
+
+	return SESSION_ID;
+};
+
+const getAccountId = async () => {
+	const session_id = SESSION_ID;
+	const config: AxiosRequestConfig = {
+		params : { session_id }
+	};
+	const RESPONSE: AxiosResponse = await api('account', config);
+	const ACCOUNT: InterfaceAccount = RESPONSE.data;
+	const ID = ACCOUNT.id;
+
+	return ID;
+};
+
+const addOrDeleteFavoriteMovie = async ({ media_id, remove = false }: { media_id: number, remove?: boolean }) => {
+	// Si queremos eliminar la película de favoritos tenemos que pasar el parámetro favorite = false;
+	const session_id = SESSION_ID;
+	const media_type = 'movie';
+	const favorite = !remove;
+	const ACCOUNT_ID = await getAccountId();
+	const config: AxiosRequestConfig = {
+		method : 'POST',
+		params : { session_id },
+		data   : {
+			media_type,
+			media_id,
+			favorite
+		}
+	};
+	const RESPONSE: AxiosResponse = await api(`account/${ACCOUNT_ID}/favorite`, config);
+	const STATUS: InterfaceStatusPostFavoriteMovie = RESPONSE.data;
+
+	return STATUS;
+};
+
+const getFavoriteMovies = async () => {
+	const session_id = SESSION_ID;
+	const ACCOUNT_ID = await getAccountId();
+	const config: AxiosRequestConfig = {
+		params : { session_id }
+	};
+	const RESPONSE: AxiosResponse = await api(`account/${ACCOUNT_ID}/favorite/movies`, config);
+	const DATA: InterfaceTheMovieDB = RESPONSE.data;
+	const MOVIES = DATA.results;
+
+	return MOVIES;
+};
+
+// console.log(await getRequestToken());
+// console.log(await getSession());
+// console.log(await getAccountId());
+// console.log(await addOrDeleteFavoriteMovie({ media_id: 937278, remove: true }));
+// console.log(await getFavoriteMovies());
+
+
+
+
+
