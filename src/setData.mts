@@ -1,9 +1,9 @@
 import { insertMovies } from './index.js';
-import { getCategoriesPreview, getLikedMovieListFromLocalStorage, getTrendingMoviesPreview, numberPageMovies } from './getData.mjs';
+import { getCategoriesPreview, getFavoriteMovies, getLikedMovieListFromLocalStorage, getTrendingMoviesPreview, numberPageMovies } from './getData.mjs';
 import { InterfaceGenres, InterfaceLikeMovie, InterfaceMovieSearch, InterfaceTheMovieDB } from './interfaces.mjs';
 import { CAROUSEL_CONTAINER, GENERIC_LIST_CONTAINER, LIKED_MOVIE_CONTAINER } from './nodes.mjs';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { api } from './api.mjs';
+import api from './api.mjs';
 import { TypeHashName } from './types.mjs';
 
 export const setImgTrending = async (): Promise<void> => {
@@ -73,7 +73,7 @@ export const setPaginatedMovieByScroll = async (): Promise<void> => {
 	insertMovies(MOVIES, GENERIC_LIST_CONTAINER, IS_CAROUSEL, { clean: false });
 };
 
-export const saveLikeMovieOnLocalStorage = (movie: InterfaceMovieSearch): void => {
+export const saveOrDeleteLikeMovieOnLocalStorage = (movie: InterfaceMovieSearch): void => {
 	const ID = movie.id;
 	let likedMovieList: InterfaceLikeMovie | string = getLikedMovieListFromLocalStorage();
 	const IS_REPEAT = likedMovieList[ID];
@@ -89,6 +89,13 @@ export const setLikedMoviesFromLocalStorage = (): void => {
 	const IS_CAROUSEL = true;
 	const LIKED_MOVIES = getLikedMovieListFromLocalStorage();
 	const MOVIES: InterfaceMovieSearch[] = Object.values(LIKED_MOVIES);
+
+	insertMovies(MOVIES, LIKED_MOVIE_CONTAINER, IS_CAROUSEL, { clean: true });
+};
+
+export const setLikedMoviesFromAPI = async (): Promise<void> => {
+	const IS_CAROUSEL = true;
+	const MOVIES = await getFavoriteMovies();
 
 	insertMovies(MOVIES, LIKED_MOVIE_CONTAINER, IS_CAROUSEL, { clean: true });
 };

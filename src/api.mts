@@ -14,4 +14,6 @@ const config: CreateAxiosDefaults = {
 	}
 };
 
-export const api: AxiosInstance = axios.create(config);
+const api: AxiosInstance = axios.create(config);
+
+export default api;

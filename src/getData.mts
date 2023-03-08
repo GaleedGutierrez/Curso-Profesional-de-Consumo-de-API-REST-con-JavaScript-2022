@@ -1,7 +1,8 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { InterfaceCategories, InterfaceGenres, InterfaceLikeMovie, InterfaceMovie, InterfaceMovieSearch, InterfaceMoviesByCategory, InterfaceTheMovieDB } from './interfaces.mjs';
-import { api } from './api.mjs';
+import { InterfaceAccount, InterfaceCategories, InterfaceGenres, InterfaceLikeMovie, InterfaceMovie, InterfaceMovieSearch, InterfaceMoviesByCategory, InterfaceSessionApi, InterfaceTheMovieDB, InterfaceTokenApi } from './interfaces.mjs';
+import api from './api.mjs';
 import { setPaginatedMovieByScroll } from './setData.mjs';
+import { SESSION_ID } from './authentication.mjs';
 
 export const getTrendingMoviesPreview = async (): Promise<InterfaceMovieSearch[]> => {
 	const RESPONSE: AxiosResponse = await api('trending/movie/day');
@@ -95,4 +96,50 @@ export const currentPageMoviesUpdate = (): (refresh?: boolean) => number => {
 	};
 };
 
+// const getRequestToken = async (): Promise<string> => {
+// 	const RESPONSE: AxiosResponse = await api('authentication/token/new');
+// 	const DATA: InterfaceTokenApi = RESPONSE.data;
+// 	const REQUEST_TOKEN = DATA.request_token;
+
+// 	return REQUEST_TOKEN;
+// };
+
+// const getSession = async () => {
+// 	const config: AxiosRequestConfig = {
+// 		params : { request_token }
+// 	};
+// 	// *Tenemos que aceptar, en nuestra cuenta de The Movie DB, la autenticación de terceros en https://www.themoviedb.org/authenticate/{request_token}
+// 	const RESPONSE: AxiosResponse = await api('authentication/session/new', config);
+// 	const DATA: InterfaceSessionApi = RESPONSE.data;
+// 	const SESSION_ID = DATA.session_id;
+
+// 	return SESSION_ID;
+// };
+
+export const getAccountId = async () => {
+	const session_id = SESSION_ID;
+	const config: AxiosRequestConfig = {
+		params : { session_id }
+	};
+	const RESPONSE: AxiosResponse = await api('account', config);
+	const ACCOUNT: InterfaceAccount = RESPONSE.data;
+	const ID = ACCOUNT.id;
+
+	return ID;
+};
+
+export const getFavoriteMovies = async () => {
+	const session_id = SESSION_ID;
+	const config: AxiosRequestConfig = {
+		params : { session_id }
+	};
+	const RESPONSE: AxiosResponse = await api(`account/${ACCOUNT_ID}/favorite/movies`, config);
+	const DATA: InterfaceTheMovieDB = RESPONSE.data;
+	const MOVIES = DATA.results;
+
+	return MOVIES;
+};
+
 export const numberPageMovies = currentPageMoviesUpdate();
+
+export const ACCOUNT_ID = await getAccountId();
