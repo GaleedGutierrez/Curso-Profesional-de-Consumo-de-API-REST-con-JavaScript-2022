@@ -1,5 +1,5 @@
 import { insertMovies } from './index.js';
-import { getCategoriesPreview, getFavoriteMovies, getLikedMovieListFromLocalStorage, getTrendingMoviesPreview, numberPageMovies } from './getData.mjs';
+import { getCategoriesPreview, getLikedMovieListFromLocalStorage, getTrendingMoviesPreview, numberPageMovies } from './getData.mjs';
 import { InterfaceGenres, InterfaceLikeMovie, InterfaceMovieSearch, InterfaceTheMovieDB } from './interfaces.mjs';
 import { CAROUSEL_CONTAINER, GENERIC_LIST_CONTAINER, LIKED_MOVIE_CONTAINER } from './nodes.mjs';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
@@ -93,9 +93,3 @@ export const setLikedMoviesFromLocalStorage = (): void => {
 	insertMovies(MOVIES, LIKED_MOVIE_CONTAINER, IS_CAROUSEL, { clean: true });
 };
 
-export const setLikedMoviesFromAPI = async (): Promise<void> => {
-	const IS_CAROUSEL = true;
-	const MOVIES = await getFavoriteMovies();
-
-	insertMovies(MOVIES, LIKED_MOVIE_CONTAINER, IS_CAROUSEL, { clean: true });
-};

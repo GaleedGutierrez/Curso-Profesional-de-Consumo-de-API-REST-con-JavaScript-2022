@@ -1,7 +1,7 @@
-import { getFavoriteMovies, getMovieById, getMovieBySearch, getMoviesByCategory, getPaginatedMovies, getRelatedMoviesId, getTrendingMoviesPreview, numberPageMovies } from './getData.mjs';
+import { getLikedMovieListFromLocalStorage, getMovieById, getMovieBySearch, getMoviesByCategory, getPaginatedMovies, getRelatedMoviesId, getTrendingMoviesPreview, numberPageMovies } from './getData.mjs';
 import { InterfaceMovie } from './interfaces.mjs';
 import { BUTTONS_GO_BACK, BUTTON_SEARCH, BUTTON_TREADING, CAROUSEL_CONTAINER, CATEGORIES_CONTAINER, CATEGORIES_SECTION, GENERIC_LIST, GENERIC_LIST_CONTAINER, HEADER_CATEGORY, HEADER_MAIN, HEADER_TITLE, LIKED_MOVIE_SECTION, MOVIE_DETAILS, SEARCH_INPUT, SIMILAR_MOVIES, SIMILAR_MOVIES_CAROUSEL, SIMILAR_MOVIES_SCROLL, TITLE_CATEGORY, TRENDING_PREVIEW } from './nodes.mjs';
-import { setCategory, setGenericMoviesList, setImgTrending, setLikedMoviesFromAPI } from './setData.mjs';
+import { setCategory, setGenericMoviesList, setImgTrending, setLikedMoviesFromLocalStorage } from './setData.mjs';
 import { removeSkeleton, removeSkeletonGoBackButton, skeletonMovieAndCategories } from './skeleton.js';
 
 // Change page
@@ -49,16 +49,12 @@ const hiddenAllElements = (): void => {
 export const showLikedMovieSection = (): void => {
 	LIKED_MOVIE_SECTION.classList.remove('hidden');
 
-	// FIXME: LocalStorage
-	// setLikedMoviesFromLocalStorage();
-	setLikedMoviesFromAPI();
+	setLikedMoviesFromLocalStorage();
 };
 
-export const amountLikedMovies = async (): Promise<number> => {
-	// FIXME: LocalStorage
-	// const LIKED_MOVIE_LIST = getLikedMovieListFromLocalStorage();
-	// const AMOUNT_LIKED_MOVIES = Object.keys(LIKED_MOVIE_LIST).length;
-	const AMOUNT_LIKED_MOVIES = (await getFavoriteMovies()).length;
+export const amountLikedMovies = (): number => {
+	const LIKED_MOVIE_LIST = getLikedMovieListFromLocalStorage();
+	const AMOUNT_LIKED_MOVIES = Object.keys(LIKED_MOVIE_LIST).length;
 
 	return AMOUNT_LIKED_MOVIES;
 };
@@ -92,9 +88,7 @@ const homePage = async (): Promise<void> => {
 	const ARE_THERE_MOVIES = true;
 	const ARE_THERE_CATEGORIES = true;
 	const ARE_THERE_CARROUSEL = true;
-	// FIXME: STORAGE
-	// const AMOUNT_LIKED_MOVIES = amountLikedMovies();
-	const AMOUNT_LIKED_MOVIES = await amountLikedMovies();
+	const AMOUNT_LIKED_MOVIES = amountLikedMovies();
 
 	hiddenAllElements();
 	HEADER_MAIN.classList.remove('hidden');

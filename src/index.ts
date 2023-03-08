@@ -1,11 +1,9 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ACCOUNT_ID, getAccountId, getFavoriteMovies } from './getData.mjs';
-import { InterfaceMovieSearch, InterfaceStatusPostFavoriteMovie } from './interfaces.mjs';
-import { showLikedMovieSection, showMovieDetails } from './navigation.js';
+import { getLikedMovieListFromLocalStorage } from './getData.mjs';
+import { InterfaceMovieSearch } from './interfaces.mjs';
+import { amountLikedMovies, showLikedMovieSection, showMovieDetails } from './navigation.js';
 import { $$, LIKED_MOVIE_SECTION } from './nodes.mjs';
 import { LAZY_LOADER } from './observer.mjs';
-import { SESSION_ID } from './authentication.mjs';
-import api from './api.mjs';
+import { saveOrDeleteLikeMovieOnLocalStorage } from './setData.mjs';
 
 export const insertMovies = (
 	movies: InterfaceMovieSearch[], container: HTMLElement, carousel: boolean,
@@ -49,10 +47,7 @@ const createMovieBox = async (movie: InterfaceMovieSearch, container: HTMLElemen
 	const VOTES = movie.vote_average.toFixed(2);
 
 	// general variables
-	//FIXME: LocalStorage
-	// const IS_LIKED = getLikedMovieListFromLocalStorage()[ID];
-	const LIST_MOVIES_LIKED = await getFavoriteMovies();
-	const IS_LIKED = LIST_MOVIES_LIKED.some((movie: InterfaceMovieSearch) => movie.id === ID);
+	const IS_LIKED = getLikedMovieListFromLocalStorage()[ID];
 
 	// Add attributes
 	ARTICLE.className = (carousel)
@@ -97,43 +92,7 @@ const createMovieBox = async (movie: InterfaceMovieSearch, container: HTMLElemen
 	LAZY_LOADER.observe(IMG);
 };
 
-// ! With LocalStorage
-// const clickLikeButton = (likedButton: HTMLButtonElement, movie: InterfaceMovieSearch, container: HTMLElement): void => {
-// 	likedButton.classList.toggle('liked-movie__button--liked');
-
-// 	const { hash: HASH } = location;
-// 	const IS_LIKED = likedButton.classList.contains('liked-movie__button--liked');
-// 	const IS_HOME = HASH === '#home';
-// 	const CONTAINER_ID = container.getAttribute('id');
-// 	const IS_CLICK_ON_FAVORITE_SECTION = CONTAINER_ID === 'main__liked-movie-list-container-id';
-
-// 	likedButton.innerText = (IS_LIKED)
-// 		? 'favorite'
-// 		: 'favorite_border';
-
-// saveOrDeleteLikeMovieOnLocalStorage(movie);
-
-// 	const AMOUNT_MOVIES_NOT_ZERO = amountLikedMovies() !== 0;
-
-// 	if (AMOUNT_MOVIES_NOT_ZERO && IS_HOME) {
-// 		showLikedMovieSection();
-// 	} else {
-// 		LIKED_MOVIE_SECTION.classList.add('hidden');
-// 	}
-
-// 	if (IS_CLICK_ON_FAVORITE_SECTION && AMOUNT_MOVIES_NOT_ZERO) {
-// 		const LIKED_BUTTON_ID = likedButton.getAttribute('data-id');
-// 		const NODES_LIKED_BUTTON_TRENDS = $$('#main__carousel-container-id .liked-movie__button--liked') as NodeListOf<HTMLButtonElement>;
-// 		const LIKED_BUTTON_TRENDS = Array.from(NODES_LIKED_BUTTON_TRENDS) as HTMLButtonElement[];
-// 		const BUTTON_SIMILAR = LIKED_BUTTON_TRENDS.find((btn: HTMLButtonElement) => btn.getAttribute('data-id') === LIKED_BUTTON_ID) as HTMLButtonElement;
-
-// 		BUTTON_SIMILAR.classList.remove('liked-movie__button--liked');
-// 		BUTTON_SIMILAR.innerText = 'favorite_border';
-// 	}
-// };
-
-// ! With direct from API
-const clickLikeButton = async (likedButton: HTMLButtonElement, movie: InterfaceMovieSearch, container: HTMLElement): Promise<void> => {
+const clickLikeButton = (likedButton: HTMLButtonElement, movie: InterfaceMovieSearch, container: HTMLElement): void => {
 	likedButton.classList.toggle('liked-movie__button--liked');
 
 	const { hash: HASH } = location;
@@ -141,16 +100,14 @@ const clickLikeButton = async (likedButton: HTMLButtonElement, movie: InterfaceM
 	const IS_HOME = HASH === '#home';
 	const CONTAINER_ID = container.getAttribute('id');
 	const IS_CLICK_ON_FAVORITE_SECTION = CONTAINER_ID === 'main__liked-movie-list-container-id';
-	const ID_MOVIE = movie.id;
 
 	likedButton.innerText = (IS_LIKED)
 		? 'favorite'
 		: 'favorite_border';
 
-	await addOrDeleteFavoriteMovie({ media_id: ID_MOVIE, remove: !IS_LIKED });
+	saveOrDeleteLikeMovieOnLocalStorage(movie);
 
-	const LIST_MOVIES = await getFavoriteMovies();
-	const AMOUNT_MOVIES_NOT_ZERO = LIST_MOVIES.length !== 0;
+	const AMOUNT_MOVIES_NOT_ZERO = amountLikedMovies() !== 0;
 
 	if (AMOUNT_MOVIES_NOT_ZERO && IS_HOME) {
 		showLikedMovieSection();
@@ -168,32 +125,3 @@ const clickLikeButton = async (likedButton: HTMLButtonElement, movie: InterfaceM
 		BUTTON_SIMILAR.innerText = 'favorite_border';
 	}
 };
-
-const addOrDeleteFavoriteMovie = async ({ media_id, remove = false }: { media_id: number, remove?: boolean }) => {
-	// Si queremos eliminar la película de favoritos tenemos que pasar el parámetro favorite = false;
-	const session_id = SESSION_ID;
-	const media_type = 'movie';
-	const favorite = !remove;
-	const config: AxiosRequestConfig = {
-		method : 'POST',
-		params : { session_id },
-		data   : {
-			media_type,
-			media_id,
-			favorite
-		}
-	};
-	const RESPONSE: AxiosResponse = await api(`account/${ACCOUNT_ID}/favorite`, config);
-	const STATUS: InterfaceStatusPostFavoriteMovie = RESPONSE.data;
-
-	return STATUS;
-};
-
-// console.log(await getRequestToken());
-// console.log(await getSession());
-// console.log(await getAccountId());
-// console.log(await addOrDeleteFavoriteMovie({ media_id: 937278, remove: true }));
-// console.log(await getFavoriteMovies());
-
-
-
