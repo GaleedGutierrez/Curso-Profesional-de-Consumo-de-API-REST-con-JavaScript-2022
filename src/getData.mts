@@ -1,8 +1,7 @@
-import { AxiosResponse } from 'axios';
-import { InterfaceCategories, InterfaceMovie, InterfaceMovieSearch, InterfaceMoviesByCategory, InterfaceTheMovieDB } from './interfaces.mjs';
-import { insertMovies } from './index.js';
-import { GENERIC_LIST_CONTAINER } from './nodes.mjs';
-import { api } from './api.mjs';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { InterfaceCategories, InterfaceGenres, InterfaceLikeMovie, InterfaceMovie, InterfaceMovieSearch, InterfaceMoviesByCategory, InterfaceTheMovieDB } from './interfaces.mjs';
+import api from './api.mjs';
+import { setPaginatedMovieByScroll } from './setData.mjs';
 
 export const getTrendingMoviesPreview = async (): Promise<InterfaceMovieSearch[]> => {
 	const RESPONSE: AxiosResponse = await api('trending/movie/day');
@@ -12,7 +11,7 @@ export const getTrendingMoviesPreview = async (): Promise<InterfaceMovieSearch[]
 	return MOVIES;
 };
 
-export const getCategoriesPreview = async () => {
+export const getCategoriesPreview = async (): Promise<InterfaceGenres[]> => {
 	const RESPONSE: AxiosResponse = await api(`genre/movie/list`);
 	const DATA: InterfaceCategories = RESPONSE.data;
 	const CATEGORIES = DATA.genres;
@@ -20,24 +19,26 @@ export const getCategoriesPreview = async () => {
 	return CATEGORIES;
 };
 
-export const getMoviesByCategory = async (id: string) => {
-	const RESPONSE: AxiosResponse = await api('discover/movie', {
+export const getMoviesByCategory = async (id: string): Promise<InterfaceMovieSearch[]> => {
+	const config: AxiosRequestConfig = {
 		params : {
 			with_genres : id
-		},
-	});
+		}
+	};
+	const RESPONSE: AxiosResponse = await api('discover/movie', config);
 	const DATA: InterfaceMoviesByCategory = RESPONSE.data;
 	const MOVIES: InterfaceMovieSearch[] = DATA.results;
 
 	return MOVIES;
 };
 
-export const getMovieBySearch = async (query: string) => {
-	const RESPONSE: AxiosResponse = await api('search/movie', {
+export const getMovieBySearch = async (query: string): Promise<InterfaceMovieSearch[]> => {
+	const config: AxiosRequestConfig = {
 		params : {
 			query
-		},
-	});
+		}
+	};
+	const RESPONSE: AxiosResponse = await api('search/movie', config);
 	const DATA: InterfaceMoviesByCategory = RESPONSE.data;
 	const MOVIES: InterfaceMovieSearch[] = DATA.results;
 
@@ -51,67 +52,38 @@ export const getMovieById = async (id: string): Promise<InterfaceMovie> => {
 	return MOVIE;
 };
 
-export const getRelatedMoviesId = async (id: number) => {
-	const RESPONSE: AxiosResponse = await api(`/movie/${id}/recommendations`);
+export const getRelatedMoviesId = async (id: number): Promise<InterfaceMovieSearch[]> => {
+	const RESPONSE: AxiosResponse = await api(`movie/${id}/recommendations`);
 	const DATA: InterfaceTheMovieDB = RESPONSE.data;
 	const RELATED_MOVIES = DATA.results;
 
 	return RELATED_MOVIES;
 };
 
-export const getPaginatedMovies = async () => {
+export const getPaginatedMovies = (): void => {
 	const {
 		scrollTop: SCROLL_TOP,
 		scrollHeight: SCROLL_HEIGHT,
 		clientHeight: CLIENT_HEIGHT
 	} = document.documentElement;
+
 	const IS_SCROLL_BOTTOM = (SCROLL_TOP + CLIENT_HEIGHT) >= (SCROLL_HEIGHT - 15);
 	const [HASH] = location.hash.split('=');
 	const IS_NOT_HOME_AND_MOVIE = HASH !== '#home' && HASH !== '#movie';
 
-	if (IS_SCROLL_BOTTOM && IS_NOT_HOME_AND_MOVIE) {
-		type TypeHashName = keyof typeof HASHES_ROUTES;
-		const HASHES_ROUTES = {
-			'#trends'   : 'trending/movie/day',
-			'#category' : 'discover/movie',
-			'#search'   : 'search/movie'
-		};
-		const DATA_OF_HASH = location.hash.split('=');
-		const HASH_NAME = DATA_OF_HASH[0] as TypeHashName;
-		const EXTRA_INFO = DATA_OF_HASH[1];
-		const ROUT = HASHES_ROUTES[HASH_NAME];
-		const params = {
-			page        : pageMovies(),
-			with_genres : '',
-			query       : ''
-		};
-
-		if (HASH_NAME === '#category') {
-			const [ID_CATEGORY] = EXTRA_INFO.split('-');
-
-			params.with_genres = ID_CATEGORY;
-		}
-
-		if (HASH_NAME === '#search') {
-			const QUERY_SEARCH = EXTRA_INFO;
-
-			params.query = QUERY_SEARCH;
-		}
-
-		const RESPONSE: AxiosResponse = await api(ROUT, { params });
-		const DATA: InterfaceTheMovieDB = RESPONSE.data;
-		const MOVIES = DATA.results;
-		const IS_MAX_PAGE = DATA.page > DATA.total_pages;
-
-		if (IS_MAX_PAGE) return;
-
-		const IS_CAROUSEL = false;
-
-		insertMovies(MOVIES, GENERIC_LIST_CONTAINER, IS_CAROUSEL, { clean: false });
-	}
+	if (IS_SCROLL_BOTTOM && IS_NOT_HOME_AND_MOVIE) setPaginatedMovieByScroll();
 };
 
-export const currentPageMoviesUpdate = () => {
+export const getLikedMovieListFromLocalStorage = (): InterfaceLikeMovie => {
+	const MOVIES_LIST = localStorage.getItem('liked-movie');
+	const MOVIES: InterfaceLikeMovie = (MOVIES_LIST)
+		? JSON.parse(MOVIES_LIST)
+		: {};
+
+	return MOVIES;
+};
+
+export const currentPageMoviesUpdate = (): (refresh?: boolean) => number => {
 	let pageMovies = 1;
 
 	return function (refresh = false) {
@@ -123,10 +95,5 @@ export const currentPageMoviesUpdate = () => {
 	};
 };
 
-// const waitATime = () => {
-// 	return new Promise((result, reject) => {
-// 		setTimeout(() => result, 2000);
-// 	});
-// };
+export const numberPageMovies = currentPageMoviesUpdate();
 
-export const pageMovies = currentPageMoviesUpdate();

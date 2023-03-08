@@ -1,83 +1,23 @@
+import { getLikedMovieListFromLocalStorage } from './getData.mjs';
 import { InterfaceMovieSearch } from './interfaces.mjs';
+import { amountLikedMovies, showLikedMovieSection, showMovieDetails } from './navigation.js';
+import { $$, LIKED_MOVIE_SECTION } from './nodes.mjs';
 import { LAZY_LOADER } from './observer.mjs';
-import { likeMovie } from './setData.mjs';
+import { saveOrDeleteLikeMovieOnLocalStorage } from './setData.mjs';
 
 export const insertMovies = (
 	movies: InterfaceMovieSearch[], container: HTMLElement, carousel: boolean,
 	{
 		clean = true
-	} = {}) => {
+	} = {}): void => {
 
 	if (clean)
 		container.innerHTML = '';
 
 
 	for (const MOVIE of movies) {
-		const ARTICLE = document.createElement('article');
-		const MOVIE_IMG = `https://image.tmdb.org/t/p/w300${MOVIE.poster_path}`;
-		const ALT_IMG = MOVIE.title;
-		const FIGURE = document.createElement('figure');
-		const IMG = document.createElement('img');
-		const LIKED_BUTTON = document.createElement('button') as HTMLButtonElement;
-
-		LIKED_BUTTON.className = 'material-icons liked-movie__button';
-		LIKED_BUTTON.innerText = 'favorite_border';
-		LIKED_BUTTON.addEventListener('click', () => {
-			LIKED_BUTTON.classList.toggle('liked-movie__button--liked');
-
-			const IS_LIKED = LIKED_BUTTON.classList.contains('liked-movie__button--liked');
-
-			LIKED_BUTTON.innerText = (IS_LIKED)
-				? 'favorite'
-				: 'favorite_border';
-
-			likeMovie(MOVIE);
-		});
-
-		const DATA_CONTAINER = `
-			<div id="liked-movie__data-id-${counterMovies}" class="liked-movie__data">
-				<div class="liked-movie__data-container">
-					<div>
-						<h3 class="liked-movie__title">${MOVIE.title}</h3>
-						<div>
-							<div class="liked-movie__info-movie-container">
-								<p class="material-icons">star</p>
-								<p>${MOVIE.vote_average.toFixed(2)}</p>
-							</div>
-							<p>${MOVIE.release_date.split('-')[0]}</p>
-						</div>
-					</div>
-				</div>
-			</div>`
-		;
-
-		ARTICLE.classList.add('generic-list__movie-container');
-		IMG.className = (carousel)
-			? 'generic-list__img-carousel'
-			: 'generic-list__img';
-
-		IMG.addEventListener('error', () => {
-			IMG.src = `https://via.placeholder.com/300x450/5c218a/ffffff?text=sorry :(`;
-		});
-
-		if (carousel)
-			ARTICLE.setAttribute('class', 'carousel__item generic-list__movie-container');
-
-		LAZY_LOADER.observe(IMG);
-		IMG.setAttribute('data-alt-img', ALT_IMG);
-		IMG.setAttribute('data-src-img', MOVIE_IMG);
-
-		FIGURE.append(IMG);
-		ARTICLE.innerHTML += DATA_CONTAINER;
-		ARTICLE.append(FIGURE, LIKED_BUTTON);
-		container.appendChild(ARTICLE);
-
-		const INFO_MOVIE_CONTAINER = document.querySelector(`#liked-movie__data-id-${counterMovies}`) as HTMLElement;
-
-		INFO_MOVIE_CONTAINER.addEventListener('click', () => showMovieDetails(MOVIE.id));
-		counterMovies++;
+		createMovieBox(MOVIE, container, carousel);
 	}
-
 
 	// if (!carousel && clean && !IsButtonLoadMore) {
 	// 	const BUTTON_LOAD_MORE = document.createElement('button') as HTMLButtonElement;
@@ -89,10 +29,99 @@ export const insertMovies = (
 	// 	IsButtonLoadMore = true;
 	// }
 };
-// const IsButtonLoadMore = false;
 
-const showMovieDetails = (id: number) => {
-	location.hash = `#movie=${id}`;
+const createMovieBox = async (movie: InterfaceMovieSearch, container: HTMLElement, carousel: boolean): Promise<void> => {
+	// Create elements DOM
+	const ARTICLE = document.createElement('article') as HTMLElement;
+	const FIGURE = document.createElement('figure') as HTMLElement;
+	const IMG = document.createElement('img') as HTMLImageElement;
+	const LIKED_BUTTON = document.createElement('button') as HTMLButtonElement;
+	const DATA_CONTAINER = document.createElement('div') as HTMLDivElement;
+
+	// Data box movie
+	const ID = movie.id;
+	const TITLE = movie.title;
+	const MOVIE_IMG = `https://image.tmdb.org/t/p/w300${movie.poster_path}`;
+	const ALT_IMG = movie.title;
+	const AGE = movie.release_date.split('-')[0];
+	const VOTES = movie.vote_average.toFixed(2);
+
+	// general variables
+	const IS_LIKED = getLikedMovieListFromLocalStorage()[ID];
+
+	// Add attributes
+	ARTICLE.className = (carousel)
+		? 'carousel__item generic-list__movie-container'
+		: 'generic-list__movie-container';
+	IMG.className = (carousel)
+		? 'generic-list__img-carousel'
+		: 'generic-list__img';
+	IMG.setAttribute('data-alt-img', ALT_IMG);
+	IMG.setAttribute('data-src-img', MOVIE_IMG);
+	LIKED_BUTTON.className = (IS_LIKED)
+		? 'material-icons liked-movie__button liked-movie__button--liked'
+		: 'material-icons liked-movie__button';
+	// getLikedMovieListFromLocalStorage()[ID] && LIKED_BUTTON.classList.add('liked-movie__button--liked');
+	LIKED_BUTTON.innerText = (IS_LIKED)
+		? 'favorite'
+		: 'favorite_border';
+	LIKED_BUTTON.setAttribute('data-id', ID.toString());
+	DATA_CONTAINER.className = 'liked-movie__data';
+
+	// addEventListers
+	IMG.addEventListener('error', () => IMG.src = `https://via.placeholder.com/300x450/8b48bf/ffffff?text=sorry :(`
+	);
+	LIKED_BUTTON.addEventListener('click', () => clickLikeButton(LIKED_BUTTON, movie, container));
+	DATA_CONTAINER.addEventListener('click', () => showMovieDetails(movie.id));
+
+	// Append elements
+	DATA_CONTAINER.innerHTML = `<div class="liked-movie__data-container">
+		<h3 class="liked-movie__title">${TITLE}</h3>
+		<div>
+			<div class="liked-movie__info-movie-container">
+				<p class="material-icons">star</p>
+				<p>${VOTES}</p>
+			</div>
+			<p>${AGE}</p>
+		</div>
+	</div>`;
+	FIGURE.append(IMG);
+	ARTICLE.append(DATA_CONTAINER, FIGURE, LIKED_BUTTON);
+	container.appendChild(ARTICLE);
+
+	LAZY_LOADER.observe(IMG);
 };
 
-let counterMovies = 0;
+const clickLikeButton = (likedButton: HTMLButtonElement, movie: InterfaceMovieSearch, container: HTMLElement): void => {
+	likedButton.classList.toggle('liked-movie__button--liked');
+
+	const { hash: HASH } = location;
+	const IS_LIKED = likedButton.classList.contains('liked-movie__button--liked');
+	const IS_HOME = HASH === '#home';
+	const CONTAINER_ID = container.getAttribute('id');
+	const IS_CLICK_ON_FAVORITE_SECTION = CONTAINER_ID === 'main__liked-movie-list-container-id';
+
+	likedButton.innerText = (IS_LIKED)
+		? 'favorite'
+		: 'favorite_border';
+
+	saveOrDeleteLikeMovieOnLocalStorage(movie);
+
+	const AMOUNT_MOVIES_NOT_ZERO = amountLikedMovies() !== 0;
+
+	if (AMOUNT_MOVIES_NOT_ZERO && IS_HOME) {
+		showLikedMovieSection();
+	} else {
+		LIKED_MOVIE_SECTION.classList.add('hidden');
+	}
+
+	if (IS_CLICK_ON_FAVORITE_SECTION && AMOUNT_MOVIES_NOT_ZERO) {
+		const LIKED_BUTTON_ID = likedButton.getAttribute('data-id');
+		const NODES_LIKED_BUTTON_TRENDS = $$('#main__carousel-container-id .liked-movie__button--liked') as NodeListOf<HTMLButtonElement>;
+		const LIKED_BUTTON_TRENDS = Array.from(NODES_LIKED_BUTTON_TRENDS) as HTMLButtonElement[];
+		const BUTTON_SIMILAR = LIKED_BUTTON_TRENDS.find((btn: HTMLButtonElement) => btn.getAttribute('data-id') === LIKED_BUTTON_ID) as HTMLButtonElement;
+
+		BUTTON_SIMILAR.classList.remove('liked-movie__button--liked');
+		BUTTON_SIMILAR.innerText = 'favorite_border';
+	}
+};

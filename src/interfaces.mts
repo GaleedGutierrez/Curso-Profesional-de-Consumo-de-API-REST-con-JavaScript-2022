@@ -91,3 +91,41 @@ export interface InterfaceSpokenLanguage {
 	iso_639_1: string;
 	name: string;
 }
+
+export interface InterfaceLikeMovie {
+	[key: number]: InterfaceMovieSearch | undefined;
+}
+
+export interface InterfaceTokenApi {
+	success: boolean;
+	expires_at: string;
+	request_token: string;
+}
+
+export interface InterfaceSessionApi {
+	success: boolean;
+	session_id: string;
+}
+
+export interface InterfaceAccount {
+	avatar: InterfaceAvatar;
+	id: number;
+	iso_639_1: string;
+	iso_3166_1: string;
+	name: string;
+	include_adult: boolean;
+	username: string;
+}
+
+export interface InterfaceAvatar {
+	gravatar: InterfaceGravatar;
+}
+
+export interface InterfaceGravatar {
+	hash: string;
+}
+
+export interface InterfaceStatusPostFavoriteMovie {
+	status_code: number;
+	status_message: string;
+}

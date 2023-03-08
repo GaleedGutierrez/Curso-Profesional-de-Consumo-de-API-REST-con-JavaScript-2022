@@ -1,14 +1,12 @@
 import { BUTTONS_GO_BACK, SEARCH_ICON } from './nodes.mjs';
 
-export const skeletonMovieAndCategories = (containerItems: HTMLElement[], movie: boolean, category: boolean, isCarousel: boolean) => {
+export const skeletonMovieAndCategories = (containerItems: HTMLElement[], movie: boolean, category: boolean, isCarousel: boolean): void => {
 	if (movie) {
-		const ITEM_SKELETON = document.createElement('article');
+		const ITEM_SKELETON = document.createElement('article') as HTMLElement;
 
-		if (isCarousel) {
-			ITEM_SKELETON.classList.add('carousel__item-skeleton');
-		} else {
-			ITEM_SKELETON.classList.add('carousel__item-generic-list-skeleton');
-		}
+		ITEM_SKELETON.className = (isCarousel)
+			? 'carousel__item-skeleton'
+			: 'carousel__item-generic-list-skeleton';
 
 		for (let i = 0; i < 10; i++) {
 			containerItems[0].append(ITEM_SKELETON.cloneNode(true));
@@ -16,7 +14,7 @@ export const skeletonMovieAndCategories = (containerItems: HTMLElement[], movie:
 	}
 
 	if (category) {
-		const CATEGORY_SKELETON = document.createElement('div') as HTMLElement;
+		const CATEGORY_SKELETON = document.createElement('div') as HTMLDivElement;
 
 		CATEGORY_SKELETON.classList.add('categories__category-skeleton');
 
@@ -26,7 +24,7 @@ export const skeletonMovieAndCategories = (containerItems: HTMLElement[], movie:
 	}
 };
 
-export const removeSkeleton = () => {
+export const removeSkeleton = (): void => {
 	if (location.hash.startsWith('#home')) {
 		SEARCH_ICON.classList.remove('header__search-icon-skeleton');
 		SEARCH_ICON.innerText = 'search';
@@ -35,7 +33,7 @@ export const removeSkeleton = () => {
 	}
 };
 
-export const removeSkeletonGoBackButton = () => {
+export const removeSkeletonGoBackButton = (): void => {
 	if (location.hash.startsWith('#search=') || location.hash.startsWith('#category=') || location.hash.startsWith('#trends')) {
 		SEARCH_ICON.classList.remove('header__search-icon-skeleton');
 		SEARCH_ICON.innerText = 'search';
