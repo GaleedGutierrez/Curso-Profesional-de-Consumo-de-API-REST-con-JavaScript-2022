@@ -141,7 +141,7 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+# dist
 
 # Gatsby files
 .cache/
@@ -256,4 +256,4 @@ $RECYCLE.BIN/
 n
 # Extras
 prepros.config
-authentication.mts
+# authentication.mts
