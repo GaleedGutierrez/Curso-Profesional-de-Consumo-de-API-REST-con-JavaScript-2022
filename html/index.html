@@ -15,7 +15,22 @@
   <body>
     <header class="header">
       <section class="header__main-header" id="header__main-id">
-        <h1 class="header__title" id="header__title-id">PlatziMovies</h1>
+        <div class="main-header__title-language-container">
+          <h1 class="header__title" id="header__title-id">PlatziMovies</h1>
+          <div class="header__languages-container" id="header__languages-container-id">
+            <button class="languages-container__button" id="languages-container__button-id"></button>
+            <div class="languages-container__form-button-container" id="languages-container__form-button-container-id">
+              <h3>Idioma</h3>
+              <button class="header__current-language-button" id="header__current-language-button-id"><span class="material-icons">keyboard_arrow_down</span></button>
+              <form class="languages-container__form" action="" method="method">
+                <label for="language">
+                  <input class="languages-container__input" id="header__input-language" list="language" placeholder="Elija su idioma">
+                  <datalist id="language"></datalist>
+                </label>
+              </form>
+            </div>
+          </div>
+        </div>
         <button class="material-icons header__arrow-left header__arrow-left-skeleton"></button>
         <form class="header__form" action="" id="header__search-form-id">
           <label class="header__label-search" for="search">

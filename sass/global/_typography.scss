@@ -136,8 +136,11 @@ textarea,
 select,
 button,
 label {
+	@include font-small;
+
 	font-family: inherit;
-	font-size: inherit;
+
+	// font-size: inherit; // opcional según el proyecto
 }
 
 button,

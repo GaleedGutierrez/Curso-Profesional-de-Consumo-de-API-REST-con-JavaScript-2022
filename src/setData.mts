@@ -1,19 +1,19 @@
-import { insertMovies } from './index.js';
-import { getCategoriesPreview, getLikedMovieListFromLocalStorage, getTrendingMoviesPreview, numberPageMovies } from './getData.mjs';
-import { InterfaceGenres, InterfaceLikeMovie, InterfaceMovieSearch, InterfaceTheMovieDB } from './interfaces.mjs';
-import { CAROUSEL_CONTAINER, GENERIC_LIST_CONTAINER, LIKED_MOVIE_CONTAINER } from './nodes.mjs';
+import { insertMovies, numberPageMovies } from './index.js';
+import { getCategoriesPreview, getLanguageApi, getLikedMovieListFromLocalStorage, getTrendingMoviesPreview } from './getData.mjs';
+import { InterfaceGenres, InterfaceLanguageApi, InterfaceLikeMovie, InterfaceMovieSearch, InterfaceTheMovieDB } from './interfaces.mjs';
+import { CAROUSEL_CONTAINER, GENERIC_LIST_CONTAINER, LANGUAGE_DATALIST, LIKED_MOVIE_CONTAINER } from './nodes.mjs';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import api from './api.mjs';
 import { TypeHashName } from './types.mjs';
 
-export const setImgTrending = async (): Promise<void> => {
+export async function setImgTrending (): Promise<void> {
 	const MOVIES: InterfaceMovieSearch[] = await getTrendingMoviesPreview();
 	const IS_CAROUSEL = true;
 
 	insertMovies(MOVIES, CAROUSEL_CONTAINER, IS_CAROUSEL);
-};
+}
 
-export const setCategory = async (category: InterfaceGenres[], container: HTMLElement, isNotMovie: boolean): Promise<void> => {
+export async function setCategory (category: InterfaceGenres[], container: HTMLElement, isNotMovie: boolean): Promise<void> {
 	container.innerHTML = '';
 
 	if (isNotMovie)
@@ -25,14 +25,14 @@ export const setCategory = async (category: InterfaceGenres[], container: HTMLEl
 
 		container.innerHTML += CATEGORY_HTML;
 	}
-};
+}
 
-export const setGenericMoviesList = (movies: InterfaceMovieSearch[], container: HTMLElement, carousel: boolean): void => {
+export function setGenericMoviesList (movies: InterfaceMovieSearch[], container: HTMLElement, carousel: boolean): void {
 	container.innerHTML = '';
 	insertMovies(movies, container, carousel);
-};
+}
 
-export const setPaginatedMovieByScroll = async (): Promise<void> => {
+export async function setPaginatedMovieByScroll (): Promise<void> {
 	const { hash: HASH } = location;
 	let rout = '';
 	const config: AxiosRequestConfig = {
@@ -71,9 +71,9 @@ export const setPaginatedMovieByScroll = async (): Promise<void> => {
 	const IS_CAROUSEL = false;
 
 	insertMovies(MOVIES, GENERIC_LIST_CONTAINER, IS_CAROUSEL, { clean: false });
-};
+}
 
-export const saveOrDeleteLikeMovieOnLocalStorage = (movie: InterfaceMovieSearch): void => {
+export function saveOrDeleteLikeMovieOnLocalStorage (movie: InterfaceMovieSearch): void {
 	const ID = movie.id;
 	let likedMovieList: InterfaceLikeMovie | string = getLikedMovieListFromLocalStorage();
 	const IS_REPEAT = likedMovieList[ID];
@@ -83,13 +83,26 @@ export const saveOrDeleteLikeMovieOnLocalStorage = (movie: InterfaceMovieSearch)
 		: movie;
 	likedMovieList = JSON.stringify(likedMovieList);
 	localStorage.setItem('liked-movie', likedMovieList);
-};
+}
 
-export const setLikedMoviesFromLocalStorage = (): void => {
+export function setLikedMoviesFromLocalStorage (): void {
 	const IS_CAROUSEL = true;
 	const LIKED_MOVIES = getLikedMovieListFromLocalStorage();
 	const MOVIES: InterfaceMovieSearch[] = Object.values(LIKED_MOVIES);
 
 	insertMovies(MOVIES, LIKED_MOVIE_CONTAINER, IS_CAROUSEL, { clean: true });
-};
+}
 
+async function setLanguagesOnDataList () {
+	const LANGUAGES: InterfaceLanguageApi[] = await getLanguageApi();
+
+	for (let i = 1; i < LANGUAGES.length; i++) {
+		const OPTION = document.createElement('option') as HTMLOptionElement;
+
+		OPTION.value = LANGUAGES[i].iso_639_1;
+		OPTION.innerText = LANGUAGES[i].english_name;
+		LANGUAGE_DATALIST.appendChild(OPTION);
+	}
+}
+
+setLanguagesOnDataList();

@@ -129,3 +129,9 @@ export interface InterfaceStatusPostFavoriteMovie {
 	status_code: number;
 	status_message: string;
 }
+
+export interface InterfaceLanguageApi {
+	iso_639_1: string;
+	english_name: string;
+	name: string;
+}

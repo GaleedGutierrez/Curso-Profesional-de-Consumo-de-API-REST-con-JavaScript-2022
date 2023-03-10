@@ -1,15 +1,15 @@
-import { getLikedMovieListFromLocalStorage } from './getData.mjs';
-import { InterfaceMovieSearch } from './interfaces.mjs';
+import { currentPageMoviesUpdate, getLanguageApi, getLikedMovieListFromLocalStorage } from './getData.mjs';
+import { InterfaceLanguageApi, InterfaceMovieSearch } from './interfaces.mjs';
 import { amountLikedMovies, showLikedMovieSection, showMovieDetails } from './navigation.js';
 import { $$, LIKED_MOVIE_SECTION } from './nodes.mjs';
 import { LAZY_LOADER } from './observer.mjs';
 import { saveOrDeleteLikeMovieOnLocalStorage } from './setData.mjs';
 
-export const insertMovies = (
+export function insertMovies (
 	movies: InterfaceMovieSearch[], container: HTMLElement, carousel: boolean,
 	{
 		clean = true
-	} = {}): void => {
+	} = {}): void {
 
 	if (clean)
 		container.innerHTML = '';
@@ -28,9 +28,9 @@ export const insertMovies = (
 	// 	GENERIC_LIST.appendChild(BUTTON_LOAD_MORE);
 	// 	IsButtonLoadMore = true;
 	// }
-};
+}
 
-const createMovieBox = async (movie: InterfaceMovieSearch, container: HTMLElement, carousel: boolean): Promise<void> => {
+async function createMovieBox (movie: InterfaceMovieSearch, container: HTMLElement, carousel: boolean): Promise<void> {
 	// Create elements DOM
 	const ARTICLE = document.createElement('article') as HTMLElement;
 	const FIGURE = document.createElement('figure') as HTMLElement;
@@ -90,9 +90,9 @@ const createMovieBox = async (movie: InterfaceMovieSearch, container: HTMLElemen
 	container.appendChild(ARTICLE);
 
 	LAZY_LOADER.observe(IMG);
-};
+}
 
-const clickLikeButton = (likedButton: HTMLButtonElement, movie: InterfaceMovieSearch, container: HTMLElement): void => {
+function clickLikeButton (likedButton: HTMLButtonElement, movie: InterfaceMovieSearch, container: HTMLElement): void {
 	likedButton.classList.toggle('liked-movie__button--liked');
 
 	const { hash: HASH } = location;
@@ -115,7 +115,7 @@ const clickLikeButton = (likedButton: HTMLButtonElement, movie: InterfaceMovieSe
 		LIKED_MOVIE_SECTION.classList.add('hidden');
 	}
 
-	if (IS_CLICK_ON_FAVORITE_SECTION && AMOUNT_MOVIES_NOT_ZERO) {
+	if (IS_CLICK_ON_FAVORITE_SECTION) {
 		const LIKED_BUTTON_ID = likedButton.getAttribute('data-id');
 		const NODES_LIKED_BUTTON_TRENDS = $$('#main__carousel-container-id .liked-movie__button--liked') as NodeListOf<HTMLButtonElement>;
 		const LIKED_BUTTON_TRENDS = Array.from(NODES_LIKED_BUTTON_TRENDS) as HTMLButtonElement[];
@@ -124,4 +124,8 @@ const clickLikeButton = (likedButton: HTMLButtonElement, movie: InterfaceMovieSe
 		BUTTON_SIMILAR.classList.remove('liked-movie__button--liked');
 		BUTTON_SIMILAR.innerText = 'favorite_border';
 	}
-};
+}
+
+export const numberPageMovies = currentPageMoviesUpdate();
+
+export const LANGUAGES_LIST = getLanguageApi();

@@ -1,28 +1,33 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { InterfaceCategories, InterfaceGenres, InterfaceLikeMovie, InterfaceMovie, InterfaceMovieSearch, InterfaceMoviesByCategory, InterfaceTheMovieDB } from './interfaces.mjs';
+import { InterfaceCategories, InterfaceGenres, InterfaceLanguageApi, InterfaceLikeMovie, InterfaceMovie, InterfaceMovieSearch, InterfaceMoviesByCategory, InterfaceTheMovieDB } from './interfaces.mjs';
 import api from './api.mjs';
 import { setPaginatedMovieByScroll } from './setData.mjs';
+import { language } from './navigation.js';
 
-export const getTrendingMoviesPreview = async (): Promise<InterfaceMovieSearch[]> => {
-	const RESPONSE: AxiosResponse = await api('trending/movie/day');
+export async function getTrendingMoviesPreview (): Promise<InterfaceMovieSearch[]> {
+	const config = { params: { language } };
+
+	const RESPONSE: AxiosResponse = await api('trending/movie/day', config);
 	const DATA: InterfaceTheMovieDB = RESPONSE.data;
 	const MOVIES = DATA.results;
 
 	return MOVIES;
-};
+}
 
-export const getCategoriesPreview = async (): Promise<InterfaceGenres[]> => {
-	const RESPONSE: AxiosResponse = await api(`genre/movie/list`);
+export async function getCategoriesPreview (): Promise<InterfaceGenres[]> {
+	const config = { params: { language } };
+	const RESPONSE: AxiosResponse = await api(`genre/movie/list`, config);
 	const DATA: InterfaceCategories = RESPONSE.data;
 	const CATEGORIES = DATA.genres;
 
 	return CATEGORIES;
-};
+}
 
-export const getMoviesByCategory = async (id: string): Promise<InterfaceMovieSearch[]> => {
+export async function getMoviesByCategory (id: string): Promise<InterfaceMovieSearch[]> {
 	const config: AxiosRequestConfig = {
 		params : {
-			with_genres : id
+			with_genres : id,
+			language
 		}
 	};
 	const RESPONSE: AxiosResponse = await api('discover/movie', config);
@@ -30,9 +35,9 @@ export const getMoviesByCategory = async (id: string): Promise<InterfaceMovieSea
 	const MOVIES: InterfaceMovieSearch[] = DATA.results;
 
 	return MOVIES;
-};
+}
 
-export const getMovieBySearch = async (query: string): Promise<InterfaceMovieSearch[]> => {
+export async function getMovieBySearch (query: string): Promise<InterfaceMovieSearch[]> {
 	const config: AxiosRequestConfig = {
 		params : {
 			query
@@ -43,24 +48,25 @@ export const getMovieBySearch = async (query: string): Promise<InterfaceMovieSea
 	const MOVIES: InterfaceMovieSearch[] = DATA.results;
 
 	return MOVIES;
-};
+}
 
-export const getMovieById = async (id: string): Promise<InterfaceMovie> => {
-	const RESPONSE: AxiosResponse = await api(`movie/${id}`);
+export async function getMovieById (id: string): Promise<InterfaceMovie> {
+	const config: AxiosRequestConfig = { params: { language } };
+	const RESPONSE: AxiosResponse = await api(`movie/${id}`, config);
 	const MOVIE: InterfaceMovie = RESPONSE.data;
 
 	return MOVIE;
-};
+}
 
-export const getRelatedMoviesId = async (id: number): Promise<InterfaceMovieSearch[]> => {
+export async function getRelatedMoviesId (id: number): Promise<InterfaceMovieSearch[]> {
 	const RESPONSE: AxiosResponse = await api(`movie/${id}/recommendations`);
 	const DATA: InterfaceTheMovieDB = RESPONSE.data;
 	const RELATED_MOVIES = DATA.results;
 
 	return RELATED_MOVIES;
-};
+}
 
-export const getPaginatedMovies = (): void => {
+export function getPaginatedMovies (): void {
 	const {
 		scrollTop: SCROLL_TOP,
 		scrollHeight: SCROLL_HEIGHT,
@@ -72,18 +78,18 @@ export const getPaginatedMovies = (): void => {
 	const IS_NOT_HOME_AND_MOVIE = HASH !== '#home' && HASH !== '#movie';
 
 	if (IS_SCROLL_BOTTOM && IS_NOT_HOME_AND_MOVIE) setPaginatedMovieByScroll();
-};
+}
 
-export const getLikedMovieListFromLocalStorage = (): InterfaceLikeMovie => {
+export function getLikedMovieListFromLocalStorage (): InterfaceLikeMovie {
 	const MOVIES_LIST = localStorage.getItem('liked-movie');
 	const MOVIES: InterfaceLikeMovie = (MOVIES_LIST)
 		? JSON.parse(MOVIES_LIST)
 		: {};
 
 	return MOVIES;
-};
+}
 
-export const currentPageMoviesUpdate = (): (refresh?: boolean) => number => {
+export function currentPageMoviesUpdate (): (refresh?: boolean) => number {
 	let pageMovies = 1;
 
 	return function (refresh = false) {
@@ -93,7 +99,13 @@ export const currentPageMoviesUpdate = (): (refresh?: boolean) => number => {
 
 		return pageMovies;
 	};
-};
+}
 
-export const numberPageMovies = currentPageMoviesUpdate();
+export async function getLanguageApi () {
+	const RESPONSE = await api('configuration/languages');
+	const LANGUAGES: InterfaceLanguageApi[] = RESPONSE.data;
+
+	return LANGUAGES;
+}
+
 
