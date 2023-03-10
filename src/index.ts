@@ -1,7 +1,7 @@
 import { currentPageMoviesUpdate, getLanguageApi, getLikedMovieListFromLocalStorage } from './getData.mjs';
 import { InterfaceLanguageApi, InterfaceMovieSearch } from './interfaces.mjs';
 import { amountLikedMovies, showLikedMovieSection, showMovieDetails } from './navigation.js';
-import { $$, LIKED_MOVIE_SECTION } from './nodes.mjs';
+import { $$, CHANGE_LANGUAGE_CONTAINER, LIKED_MOVIE_SECTION } from './nodes.mjs';
 import { LAZY_LOADER } from './observer.mjs';
 import { saveOrDeleteLikeMovieOnLocalStorage } from './setData.mjs';
 

@@ -286,6 +286,12 @@ export async function changeLanguage (event: Event) {
 	localStorage.setItem('language', JSON.stringify(NEW_LANGUAGE));
 }
 
+function resizeBoxChangeLanguage () {
+	const WITH = CHANGE_LANGUAGE_CONTAINER.clientWidth;
+
+	CHANGE_LANGUAGE_CONTAINER.style.left = `calc(50% - ${WITH / 2}px)`;
+}
+
 for (const BUTTON of BUTTONS_GO_BACK) {
 	BUTTON.addEventListener('click', goBackButton);
 }
@@ -304,6 +310,7 @@ BUTTON_CURRENT_LANGUAGE.addEventListener('click', () => {
 });
 BUTTON_CHANGE_LANGUAGE.addEventListener('click', () => {
 	CHANGE_LANGUAGE_CONTAINER.classList.toggle('languages-container__form-button-container--visible');
+	resizeBoxChangeLanguage();
 });
 BUTTON_SEARCH.addEventListener('click', goSearchSection);
 window.addEventListener('load', removeSkeleton, false);
@@ -311,3 +318,4 @@ window.addEventListener('hashchange', addHash, false);
 window.addEventListener('scroll', getPaginatedMovies);
 window.addEventListener('hashchange', navigation, false);
 window.addEventListener('load', navigation, false);
+window.addEventListener('resize', resizeBoxChangeLanguage);
