@@ -37,4 +37,6 @@ export const GENERIC_LIST_CONTAINER = $('#generic-list__container-id');
 // Liked Movies
 export const LIKED_MOVIE_SECTION = $('#main__liked-section-id');
 export const LIKED_MOVIE_CONTAINER = $('#main__liked-movie-list-container-id');
+// Footer
+export const FOOTER = $('#footer-id');
 //# sourceMappingURL=nodes.mjs.map

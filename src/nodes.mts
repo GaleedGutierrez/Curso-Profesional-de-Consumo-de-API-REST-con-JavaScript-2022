@@ -45,3 +45,6 @@ export const GENERIC_LIST_CONTAINER = $('#generic-list__container-id') as HTMLEl
 // Liked Movies
 export const LIKED_MOVIE_SECTION = $('#main__liked-section-id') as HTMLElement;
 export const LIKED_MOVIE_CONTAINER = $('#main__liked-movie-list-container-id') as HTMLElement;
+
+// Footer
+export const FOOTER = $('#footer-id') as HTMLElement;

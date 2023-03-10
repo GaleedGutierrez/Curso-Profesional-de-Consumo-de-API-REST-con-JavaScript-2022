@@ -1,22 +1,22 @@
 import { currentPageMoviesUpdate, getLanguageApi, getLikedMovieListFromLocalStorage } from './getData.mjs';
 import { amountLikedMovies, showLikedMovieSection, showMovieDetails } from './navigation.js';
-import { $$, LIKED_MOVIE_SECTION } from './nodes.mjs';
+import { $$, GENERIC_LIST, LIKED_MOVIE_SECTION } from './nodes.mjs';
 import { LAZY_LOADER } from './observer.mjs';
-import { saveOrDeleteLikeMovieOnLocalStorage } from './setData.mjs';
+import { saveOrDeleteLikeMovieOnLocalStorage, setPaginatedMovieByScroll } from './setData.mjs';
 export function insertMovies(movies, container, carousel, { clean = true } = {}) {
     if (clean)
         container.innerHTML = '';
     for (const MOVIE of movies) {
         createMovieBox(MOVIE, container, carousel);
     }
-    // if (!carousel && clean && !IsButtonLoadMore) {
-    // 	const BUTTON_LOAD_MORE = document.createElement('button') as HTMLButtonElement;
-    // 	BUTTON_LOAD_MORE.innerText = 'CARGAR MÁS';
-    // 	BUTTON_LOAD_MORE.className = 'generic-list__button main__button-see-more';
-    // 	BUTTON_LOAD_MORE.addEventListener('click', getPaginatedTrendingMovies);
-    // 	GENERIC_LIST.appendChild(BUTTON_LOAD_MORE);
-    // 	IsButtonLoadMore = true;
-    // }
+    if (!carousel && clean && !IsButtonLoadMore) {
+        const BUTTON_LOAD_MORE = document.createElement('button');
+        BUTTON_LOAD_MORE.innerText = 'CARGAR MÁS';
+        BUTTON_LOAD_MORE.className = 'generic-list__button main__button-see-more';
+        BUTTON_LOAD_MORE.addEventListener('click', setPaginatedMovieByScroll);
+        GENERIC_LIST.appendChild(BUTTON_LOAD_MORE);
+        IsButtonLoadMore = true;
+    }
 }
 async function createMovieBox(movie, container, carousel) {
     // Create elements DOM
@@ -101,4 +101,5 @@ function clickLikeButton(likedButton, movie, container) {
 }
 export const numberPageMovies = currentPageMoviesUpdate();
 export const LANGUAGES_LIST = getLanguageApi();
+let IsButtonLoadMore = false;
 //# sourceMappingURL=index.js.map
