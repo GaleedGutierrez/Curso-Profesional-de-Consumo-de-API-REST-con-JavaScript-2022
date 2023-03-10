@@ -4,7 +4,7 @@ const OPTIONS_OBSERVER = {
 	threshold  : 0.02
 };
 
-const ACTION_ON_TARGET = (entries: IntersectionObserverEntry[]): void => {
+function ACTION_ON_TARGET (entries: IntersectionObserverEntry[]): void {
 	for (let i = 0; i < entries.length; i++) {
 		const ENTRY = entries[i];
 
@@ -30,6 +30,6 @@ const ACTION_ON_TARGET = (entries: IntersectionObserverEntry[]): void => {
 	// 		}
 	// 	}
 	// );
-};
+}
 
 export const LAZY_LOADER = new IntersectionObserver(ACTION_ON_TARGET, OPTIONS_OBSERVER);

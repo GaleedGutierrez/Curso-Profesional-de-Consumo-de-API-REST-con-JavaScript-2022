@@ -1,6 +1,18 @@
 header.header
 	section#header__main-id.header__main-header
-		h1#header__title-id.header__title PlatziMovies
+		.main-header__title-language-container
+			h1#header__title-id.header__title PlatziMovies
+			#header__languages-container-id.header__languages-container
+				button#languages-container__button-id.languages-container__button
+				#languages-container__form-button-container-id.languages-container__form-button-container
+					h3 Idioma
+					button#header__current-language-button-id.header__current-language-button
+						span.material-icons keyboard_arrow_down
+					form.languages-container__form(action="" method="method")
+						label(for="language")
+							input#header__input-language(list="language" placeholder="Elija su idioma").languages-container__input
+							datalist(id="language")
+
 		button.material-icons.header__arrow-left.header__arrow-left-skeleton
 		form(action="")#header__search-form-id.header__form
 			label(for="search").header__label-search
@@ -8,7 +20,10 @@ header.header
 			button(type="submit")#header__button-search-id.header__button-search
 				span#header__search-icon-id.material-icons.header__search-icon.header__search-icon-skeleton
 
+
 	section#header__category-id.header__category-movie.hidden
 		button.material-icons.header__arrow-left.header__arrow-left-skeleton
 		h2#category-movie__title-id.category-movie__title-skeleton
-//- .header-category-movie esto va en el tag header
+
+
+
